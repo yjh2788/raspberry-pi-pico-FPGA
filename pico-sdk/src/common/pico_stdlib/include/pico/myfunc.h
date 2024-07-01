@@ -1,0 +1,1 @@
+void pinMode(int, int);
