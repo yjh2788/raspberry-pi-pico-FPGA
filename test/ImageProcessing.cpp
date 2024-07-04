@@ -2,7 +2,7 @@
 
 
 
-Mat::Mat(uint16_t width, uint16_t height, enum IMG_Type Itype)
+Mat::Mat(uint16_t width, uint16_t height, IMG_Type Itype)
 {
     this->cols=width;
     this->rows=height;

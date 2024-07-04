@@ -20,8 +20,7 @@ public:
     uint8_t* green=nullptr;
     uint8_t* blue=nullptr; 
     bool img_type;
-    Mat(uint16_t width, uint16_t height, enum IMG_Type);
-    Mat();
+    Mat(uint16_t width, uint16_t height, IMG_Type);
     ~Mat();
 
     void rgb565_to_rgb888(uint16_t rgb565_color, uint8_t &red, uint8_t &green, uint8_t &blue);
