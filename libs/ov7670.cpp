@@ -1,5 +1,6 @@
 #include "ov7670.h"
 
+
 uint8_t reg_vals[][2] = {
     {0x12, 0x80}, // Soft reset
     {0xFF, 0xFF}, // delay
@@ -110,7 +111,7 @@ void ov7670::ov7670_init(i2c_inst_t *i2c, uint32_t baudrate)
     }
 }
 
-void ov7670::getFrame()
+Mat ov7670::getFrame()
 {
     uint16_t pixel=0;
     int16_t rows = this->m_img.rows;
@@ -127,11 +128,11 @@ void ov7670::getFrame()
         for (int width = 0; width < cols; width++)
         {
             wait_for_posedge(m_PLK);
-            pixel = (uint16_t)get_word_data() << 8;//high
+            pixel = static_cast<uint16_t>(get_word_data()) << 8;//high
             wait_for_negedge(m_PLK);
 
             wait_for_posedge(m_PLK);
-            pixel=pixel|(uint16_t)get_word_data();//low
+            pixel=pixel|static_cast<uint16_t>(get_word_data());//low
             wait_for_negedge(m_PLK);
             
             //save pixel values in data array
@@ -140,6 +141,7 @@ void ov7670::getFrame()
         
 
     }
+    return m_img;
 }
 
 Mat ov7670::getFrame(uint16_t width, uint16_t height, IMG_Type Itype)
@@ -157,11 +159,11 @@ Mat ov7670::getFrame(uint16_t width, uint16_t height, IMG_Type Itype)
         for (int j = 0; j < width; j++)
         {
             wait_for_posedge(m_PLK);
-            pixel = (uint16_t)get_word_data() << 8;//high
+            pixel = static_cast<uint16_t>(get_word_data()) << 8;//high
             wait_for_negedge(m_PLK);
 
             wait_for_posedge(m_PLK);
-            pixel=pixel|(uint16_t)get_word_data();//low
+            pixel=pixel | static_cast<uint16_t>(get_word_data());//low
             wait_for_negedge(m_PLK);
             
             //save pixel values in data array
@@ -170,6 +172,7 @@ Mat ov7670::getFrame(uint16_t width, uint16_t height, IMG_Type Itype)
         
 
     }
+    return m_img;
 }
 
 uint8_t ov7670::get_word_data()

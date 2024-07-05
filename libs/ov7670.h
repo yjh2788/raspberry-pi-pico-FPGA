@@ -1,10 +1,13 @@
 
 #ifndef OV7670_H
 #define OV7670_H
+#include "ov7670_reg.h"
 #include "pico/stdlib.h"
 #include "myfunc.h"
 #include "hardware/i2c.h"
+#include "hardware/pwm.h"
 #include "ImageProcessing.h"
+#include "pico/binary_info/code.h"
 
 // respberry pico gpio pin allocation
 #define SCL 1
@@ -49,13 +52,14 @@ public:
     uint32_t data_mask;
 
     ov7670();
-    ov7670::ov7670(uint width, uint height, IMG_Type Itype);
+    ov7670(uint width, uint height, IMG_Type Itype);
     void ov7670_pin_init();
     void ov7670_init(i2c_inst_t *i2c, uint32_t baudrate);
-    void getFrame();
-    Mat ov7670::getFrame(uint16_t width, uint16_t height, IMG_Type Itype);
+    Mat getFrame();
+    Mat getFrame(uint16_t width, uint16_t height, IMG_Type Itype);
     uint8_t get_word_data();
 
 };
+
 
 #endif

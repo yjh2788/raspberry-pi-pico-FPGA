@@ -1,6 +1,11 @@
 #include "ImageProcessing.h"
 
-
+Mat::Mat()
+{
+    this->cols=0;
+    this->rows=0;
+    this->img_type=NULL;
+}
 
 Mat::Mat(uint16_t width, uint16_t height, IMG_Type Itype)
 {
@@ -9,29 +14,29 @@ Mat::Mat(uint16_t width, uint16_t height, IMG_Type Itype)
     this->img_type=Itype;
     if( Itype==IMG_Type::RGB565)
     {
-        this->data=new uint16_t[width*height];
+        this->data=Array<uint16_t>::createArray(width*height);
     }
     else if((Itype==IMG_Type::RGB888))
     {
-        this->blue=new uint8_t[width*height];
-        this->red=new uint8_t[width*height];
-        this->green=new uint8_t[width*height];
+        this->blue=Array<uint8_t>::createArray(width*height);
+        this->red=Array<uint8_t>::createArray(width*height);
+        this->green=Array<uint8_t>::createArray(width*height);
     }
         
     else if((Itype==IMG_Type::GRAY))
     {
-        this->gray= new uint8_t[width*height];
+        this->gray= Array<uint8_t>::createArray(width*height);
     }
     
 }
 
 Mat::~Mat()
 {
-    if(_msize(this->data)!=0) delete []this->data;
-    if(_msize(this->red)!=0) delete []this->red;
-    if(_msize(this->blue)!=0) delete []this->blue;
-    if(_msize(this->green)!=0) delete []this->green;
-    if(_msize(this->gray)!=0) delete []this->gray;
+    if(this->data.size()!=0) this->data.freeArray();
+    if(this->red.size()!=0) this->red.freeArray();
+    if(this->blue.size()!=0) this->blue.freeArray();
+    if(this->green.size()!=0) this->green.freeArray();
+    if(this->gray.size()!=0) this->gray.freeArray();
 
 }
 

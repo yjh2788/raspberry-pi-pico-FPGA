@@ -4,10 +4,10 @@
 #include <stdbool.h>
 #include "myfunc.h"
 
+bool debug=true;
+
 void pinMode(int led_pin, int mode)
 {
-    int led_pin;
-    int mode;
     if (mode)
     {
         gpio_set_dir(led_pin, GPIO_IN);

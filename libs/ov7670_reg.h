@@ -1,8 +1,6 @@
 #ifndef OV7670_REG_H
 #define OV7670_REG_H
 
-#endif
-
 /* Registers */
 #define REG_GAIN 0x00     /* Gain lower 8 bits (rest in vref) */
 #define REG_BLUE 0x01     /* blue gain */
@@ -264,3 +262,4 @@
 #define AWBCTR2 0x6d /* AWB Control 2 */
 #define AWBCTR1 0x6e /* AWB Control 1 */
 #define AWBCTR0 0x6f /* AWB Control 0 */
+#endif
