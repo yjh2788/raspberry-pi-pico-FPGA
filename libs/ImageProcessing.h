@@ -3,8 +3,6 @@
 
 #include "pico/stdlib.h"
 #include "myfunc.h"
-#include <malloc.h>
-
 
 enum IMG_Type
 {

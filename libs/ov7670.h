@@ -25,9 +25,11 @@
 #define D6 10
 #define D7 21
 
-#define default_width 640
-#define default_height 420
+#define default_width 320
+#define default_height 240
 #define default_Itype IMG_Type::RGB565
+#define ov7670_I2C_ADDRESS 0x21
+//The 7 bit SCCB/I2C address is 0x21, this translates to 0x42 for write address and 0x43 for read address.
 
 class ov7670
 {
@@ -50,6 +52,7 @@ public:
 
     uint32_t pin_mask;
     uint32_t data_mask;
+    uint8_t ov7670_address;
 
     ov7670();
     ov7670(uint width, uint height, IMG_Type Itype);

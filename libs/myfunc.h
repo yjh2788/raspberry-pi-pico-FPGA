@@ -5,6 +5,7 @@
 #include "Array.h"
 
 #define MASK(pin) 1ul << pin
+#define default_reset_Pin 2
 
 // typedef signed char int8_t;
 // typedef unsigned char   uint8_t;
@@ -16,7 +17,8 @@
 
 
 extern bool debug;
-
+void blink(int num);
+bool reset(uint pin=default_reset_Pin);
 void debug_print(bool debug, const char *fmt, ...);
 void pinMode(int, int);
 void debug_error_led();

@@ -8,6 +8,7 @@
 #include "hardware/resets.h"
 #include "hardware/clocks.h"
 #include "pico/timeout_helper.h"
+#include "pico/error.h"
 
 check_hw_layout(i2c_hw_t, enable, I2C_IC_ENABLE_OFFSET);
 check_hw_layout(i2c_hw_t, clr_restart_det, I2C_IC_CLR_RESTART_DET_OFFSET);
@@ -148,7 +149,7 @@ static int i2c_write_blocking_internal(i2c_inst_t *i2c, uint8_t addr, const uint
 
     uint32_t abort_reason = 0;
     int byte_ctr;
-
+    
     int ilen = (int)len;
     for (byte_ctr = 0; byte_ctr < ilen; ++byte_ctr) {
         bool first = byte_ctr == 0;

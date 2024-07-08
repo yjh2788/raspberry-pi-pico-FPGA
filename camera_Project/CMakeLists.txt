@@ -17,10 +17,11 @@ add_executable(${projname}
         "${project_PATH}/libs/ov7670.cpp"
         "${project_PATH}/libs/ImageProcessing.cpp"
         "${project_PATH}/libs/myfunc.cpp"
+        "${project_PATH}/libs/Array.cpp"
         )
 pico_enable_stdio_usb(${projname} 1)
 pico_enable_stdio_uart(${projname} 0)
-target_link_libraries(${projname} pico_stdlib pico_stdio_usb hardware_i2c hardware_pwm)
+target_link_libraries(${projname} pico_stdlib pico_stdio_usb hardware_i2c hardware_pwm hardware_clocks)
 pico_add_extra_outputs(${projname})
 
 
