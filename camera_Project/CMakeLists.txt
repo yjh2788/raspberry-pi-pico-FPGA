@@ -21,7 +21,7 @@ add_executable(${projname}
         )
 pico_enable_stdio_usb(${projname} 1)
 pico_enable_stdio_uart(${projname} 0)
-target_link_libraries(${projname} pico_stdlib pico_stdio_usb hardware_i2c hardware_pwm hardware_clocks)
+target_link_libraries(${projname} pico_stdlib pico_stdio_usb hardware_i2c hardware_pwm hardware_clocks hardware_irq hardware_watchdog)
 pico_add_extra_outputs(${projname})
 
 

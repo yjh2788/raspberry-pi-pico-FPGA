@@ -3,6 +3,12 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include "myfunc.h"
+#include "hardware/gpio.h"
+#include "hardware/irq.h"
+#include "hardware/watchdog.h"
+
+// #include "hardware_watchdog/include/hardware/watchdog.h"
+// #include "hardware_gpio/include/hardware/gpio.h"
 
 bool debug=true;
 
@@ -19,6 +25,14 @@ void pinMode(int led_pin, int mode)
 }
 
 void debug_print(bool debug, const char *fmt, ...) {
+    if (debug) {
+        va_list args;
+        va_start(args, fmt);
+        vprintf(fmt, args);
+        va_end(args);
+    }
+}
+void debug_print(const char *fmt, ...) {
     if (debug) {
         va_list args;
         va_start(args, fmt);
@@ -81,30 +95,34 @@ bool wait_for_negedge(uint input_pin)
 
 void blink(int num)
 {
-    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
-    gpio_init(LED_PIN);
-    //gpio_set_dir(LED_PIN, GPIO_OUT);
-    pinMode(LED_PIN,0);
-    gpio_put(LED_PIN, 0);
-    sleep_ms(1000);
-
-    for (int i =0; i<num;i++)
+    if (debug)
     {
-        gpio_put(LED_PIN, 1);
-        sleep_ms(250);
+        const uint LED_PIN = PICO_DEFAULT_LED_PIN;
+        gpio_init(LED_PIN);
+        //gpio_set_dir(LED_PIN, GPIO_OUT);
+        pinMode(LED_PIN,0);
         gpio_put(LED_PIN, 0);
-        sleep_ms(250);
+        sleep_ms(1000);
+
+        for (int i =0; i<num;i++)
+        {
+            gpio_put(LED_PIN, 1);
+            sleep_ms(250);
+            gpio_put(LED_PIN, 0);
+            sleep_ms(250);
+        }
     }
 }
 
-bool reset(uint pin)
+void reset_callback(uint gpio, uint32_t events)
 {
-    gpio_init(default_reset_Pin);
-    gpio_set_dir(default_reset_Pin,GPIO_IN);
-
-    wait_for_posedge(default_reset_Pin);
-    printf("reset");
-    return 1;
-
+    watchdog_reboot(0, 0, 0);
+}
+void reset_IRQ_init(uint pin)
+{
+    gpio_init(pin);
+    gpio_set_dir(pin,GPIO_IN);
+    gpio_pull_up(pin);
+    gpio_set_irq_enabled_with_callback(pin, GPIO_IRQ_EDGE_FALL, true, &reset_callback);
 }
 

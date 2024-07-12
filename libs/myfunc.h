@@ -18,8 +18,10 @@
 
 extern bool debug;
 void blink(int num);
-bool reset(uint pin=default_reset_Pin);
+void reset_callback(uint gpio, uint32_t events);
+void reset_IRQ_init(uint pin=default_reset_Pin);
 void debug_print(bool debug, const char *fmt, ...);
+void debug_print(const char *fmt, ...);
 void pinMode(int, int);
 void debug_error_led();
 bool wait_for_posedge(uint input_pin);

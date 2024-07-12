@@ -6,12 +6,17 @@
 
 enum IMG_Type
 {
-    RGB565=0,
-    RGB888=1,
-    GRAY=2
+    RGB565 = 0,
+    RGB888 = 1,
+    YUV = 2,
+    RAW_RGB= 3,
+    p_RAW_RGB = 4,
+    GRAY = 5
+
 };
 
-class Mat{
+class Mat
+{
 public:
     int16_t cols;
     int16_t rows;
@@ -19,7 +24,7 @@ public:
     Array<uint8_t> gray;
     Array<uint8_t> red;
     Array<uint8_t> green;
-    Array<uint8_t> blue; 
+    Array<uint8_t> blue;
     bool img_type;
     Mat(uint16_t width, uint16_t height, IMG_Type);
     Mat();

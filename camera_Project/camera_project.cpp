@@ -15,28 +15,28 @@
 
 int main()
 {
-    debug=false;
     stdio_init_all();
+    reset_IRQ_init(default_reset_Pin);
+    debug=false;
+    
     blink(10);
-    ov7670 cam(default_width,default_height,default_Itype);
-    //Mat img;
+    ov7670 cam(QCIF_width,QCIF_height,default_Itype);
     cam.ov7670_init(I2C,baud);
-    do{
-        Mat img=cam.getFrame();
-        int num=img.data.size();
-        printf("num=%d\n",num);
+    //cam.setImageType(IMG_Type::RGB565);
+    
+    Mat img = cam.getFrame();
+    int num = img.data.size();
+    printf("num=%d\n",num);
 
-        for (int i=0; i<num; i++)
-        {
-            //printf("%x \t%x \t%x \t%x \n",img.data[i],img.data[i+1],img.data[i+2],img.data[i+3]);
-            printf("%04x ",img.data[i]);
-            if(i%150==0) printf("\n");
-        }
-        blink(5);
-        printf("\nfinished");
+    for (int i=0; i<num; i++)
+    {
+        //printf("%x \t%x \t%x \t%x \n",img.data[i],img.data[i+1],img.data[i+2],img.data[i+3]);
+        printf("%04x ",img.data[i]);
+        if(i%150==0) printf("\n");
     }
-    while(reset());
-
+    blink(10);
+    printf("\nfinished");
+    
     return 0;
 }
 
