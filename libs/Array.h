@@ -15,8 +15,10 @@ public:
     size_t size() const;
 
     static Array<T> createArray(size_t size);
+    Array<T> zeros(size_t size);
     void freeArray(Array<T>* arr);
     void freeArray();
+    T* getbuf();
 
 
 private:

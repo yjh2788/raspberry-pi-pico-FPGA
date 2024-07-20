@@ -11,7 +11,8 @@ enum IMG_Type
     YUV = 2,
     RAW_RGB= 3,
     p_RAW_RGB = 4,
-    GRAY = 5
+    GRAY = 5,
+    RAW_DATA = 6
 
 };
 
@@ -22,6 +23,7 @@ public:
     int16_t rows;
     Array<uint16_t> data;
     Array<uint8_t> gray;
+    Array<uint8_t> data8;
     Array<uint8_t> red;
     Array<uint8_t> green;
     Array<uint8_t> blue;

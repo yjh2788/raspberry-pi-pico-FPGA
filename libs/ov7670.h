@@ -10,21 +10,23 @@
 #include "pico/binary_info/code.h"
 
 // respberry pico gpio pin allocation
-#define SCL 1
-#define SDA 0
-#define VS 26
-#define HS 7
-#define PLK 22
-#define XLK 9
-#define D0 13
-#define D1 18
-#define D2 12
-#define D3 19
-#define D4 11
-#define D5 20
-#define D6 10
-#define D7 21
+#define SCL 8
+#define SDA 9
+#define VS 13
+#define HS 12
+#define PLK 11
+#define XLK 10
+#define D0 0
+#define D1 1
+#define D2 2
+#define D3 3
+#define D4 4
+#define D5 5
+#define D6 6
+#define D7 7
 
+#define QQVGA_width 160u
+#define QQVGA_height 120u
 #define QVGA_width 320u
 #define QVGA_height 240u
 #define VGA_width 640u
@@ -42,8 +44,9 @@ enum resolution
 {
     VGA = 0,  // 640 x 480 //RGB
     QVGA = 1, // 320 x 240 //RGB
-    CIF = 2,  // 352 x 288  //YCbCr
-    QCIF = 3  // 176 x 144 //YCbCr
+    QQVGA = 2, // 160 x 120 //RGB
+    CIF = 3,  // 352 x 288  //YCbCr
+    QCIF = 4  // 176 x 144 //YCbCr
 };
 
 class ov7670
@@ -73,12 +76,20 @@ public:
     uint8_t m_img_format=RGB565;
  
     ov7670();
+    ov7670(IMG_Type Itype);
     ov7670(uint width, uint height, IMG_Type Itype);
     void ov7670_pin_init();
     void ov7670_init(i2c_inst_t *i2c, uint32_t baudrate);
     Mat getFrame();
+    Mat getFrame2();
     Mat getFrame(uint16_t width, uint16_t height, IMG_Type Itype);
+    void print_RAW16bitdata(uint16_t width, uint16_t height);
+    void print_RAW16bitdata2(uint16_t * buf);
+    void print_RAW8bitdata(uint8_t * buf);
     uint8_t get_word_data();
+    uint8_t get_word_data2();
+    uint8_t get_word_data3();
+    uint8_t sendCommand_regs(const uint8_t** src);
     uint8_t sendCommand(const uint8_t* src);
     uint8_t sendCommand(const uint8_t reg, const uint8_t data);
     uint8_t readReg(const uint8_t reg);

@@ -63,7 +63,7 @@ bool wait_for_posedge(uint input_pin)
     while(1)
     {
         bool now=gpio_get(input_pin);
-        if(past != 0 && now != 1)
+        if((past != 0) && (now != 1))
             continue;
         else
             return 1;
@@ -81,7 +81,7 @@ bool wait_for_negedge(uint input_pin)
     while(1)
     {
         bool now=gpio_get(input_pin);
-        if(past != 1 && now != 0)
+        if((past != 1) && (now != 0))
             continue;
         else
             return 1;
@@ -94,6 +94,24 @@ bool wait_for_negedge(uint input_pin)
 
 
 void blink(int num)
+{
+   
+    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
+    gpio_init(LED_PIN);
+    //gpio_set_dir(LED_PIN, GPIO_OUT);
+    pinMode(LED_PIN,0);
+    gpio_put(LED_PIN, 0);
+    sleep_ms(1000);
+    for (int i =0; i<num;i++)
+    {
+        gpio_put(LED_PIN, 1);
+        sleep_ms(250);
+        gpio_put(LED_PIN, 0);
+        sleep_ms(250);
+    }
+
+}
+void debug_blink(int num)
 {
     if (debug)
     {

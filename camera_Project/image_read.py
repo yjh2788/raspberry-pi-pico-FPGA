@@ -6,8 +6,9 @@ ser = serial.Serial('COM6', 9600)  # Windows
 with open('output.txt', 'w') as outfile:
     while True:
         if ser.in_waiting > 0:
-            data = ser.read(ser.in_waiting).decode('utf-8', errors='ignore')
+            data = ser.read(ser.in_waiting).decode('ascii')
             outfile.write(data)
-            print(data, end='')  # 터미널에 출력
+            outfile.flush()  # 버퍼 비우기
+            print(data,end="")  # 터미널에 출력
 
 ser.close()

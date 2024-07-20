@@ -4,8 +4,9 @@ import cv2
 
     # image resolution
 #width, height = 320, 240
-width, height = 176, 144
-def get_image_from_txtFile(path="raw data.txt",dtype=np.uint8):
+#width, #height = 176, 144
+# width, height = 160, 120
+def get_image_from_txtFile(width,height,path="raw data.txt",dtype=np.uint8):
     #read data from file
     with open(path, "r") as file:
         data = file.read()
@@ -25,7 +26,7 @@ def get_image_from_txtFile(path="raw data.txt",dtype=np.uint8):
         
     flat_data=image_array.flatten()
     flat_data=flat_data.reshape((-1, 1)).view(dtype).flatten()
-    return flat_data
+    return flat_data,len(data_values)
 
 # RGB565 -> RGB888 
 def rgb565_to_rgb8882(value):
@@ -35,9 +36,9 @@ def rgb565_to_rgb8882(value):
     return (r, g, b)
 
 def rgb565_to_rgb888(value):
-    r = ((value & 0xf800) >> 11) * 255 // 31
-    g = ((value & 0x07e0) >> 5) * 255 // 63
-    b = (value & 0x001f) * 255 // 31
+    r = ((value & 0xf800) >> 11) <<3#* 255 // 31
+    g = ((value & 0x07e0) >> 5) <<2#* 255 // 63
+    b = (value & 0x001f) <<3#* 255 // 31
     return (r, g, b)
 
 
@@ -46,7 +47,7 @@ def RGB565_to_RGB888(img,height,width):
     image_rgb = np.zeros((height, width, 3), dtype=np.uint8)
     for row in range(height):
         for col in range(width):
-            image_rgb[row, col] = rgb565_to_rgb888(img[row, col])
+            image_rgb[row, col] = rgb565_to_rgb888(np.uint16(img[row, col]))
     return image_rgb
 
 def split_4bit_values(value):
@@ -75,7 +76,7 @@ def split_8bit_values(value):
 
 def yuv422_to_rgb(yuv422_data, width, height):
     # Reshape the flat data to (height, width * 2) for processing
-    yuv422_data = np.reshape(yuv422_data, (height, width * 2))
+    yuv422_data = np.reshape(yuv422_data, (height, width * 2)) 
 
     # Extract Y, U, V channels from YUV422 data
     y0 = yuv422_data[:, 0::4]
@@ -87,7 +88,7 @@ def yuv422_to_rgb(yuv422_data, width, height):
     y = np.zeros((height, width), dtype=np.uint8)
     y[:, 0::2] = y0
     y[:, 1::2] = y1
-    y=yuv422_data[:, 0::2]
+    #y=yuv422_data[:, 0::2]
 
     # Upsample U and V to the full image size
     u = np.repeat(u, 2, axis=1)

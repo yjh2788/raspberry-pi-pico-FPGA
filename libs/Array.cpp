@@ -68,10 +68,28 @@ size_t Array<T>::size() const {
 }
 
 template<typename T>
+T* Array<T>::getbuf()
+{
+    return this->data;
+}
+
+template<typename T>
  Array<T> Array<T>::createArray(size_t size)
 {
     return Array<T>(size);
 }
+
+template<typename T>
+Array<T> Array<T>::zeros(size_t size)
+ {
+    Array<T> arr(size);
+    int size_=arr.size();
+    for(int i=0;i<size_;i++)
+    {
+        arr[i]=0;
+    }
+    return arr;
+ }
 
 template<typename T>
 void Array<T>::freeArray(Array<T>* arr) {

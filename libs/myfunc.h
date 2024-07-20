@@ -18,6 +18,7 @@
 
 extern bool debug;
 void blink(int num);
+void debug_blink(int num);
 void reset_callback(uint gpio, uint32_t events);
 void reset_IRQ_init(uint pin=default_reset_Pin);
 void debug_print(bool debug, const char *fmt, ...);

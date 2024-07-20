@@ -105,6 +105,11 @@
 
 #define REG_COM14 0x3e     /* Control 14 */
 #define COM14_DCWEN 0x10   /* DCW/PCLK-scale enable */
+#define COM14_CLK_DIV1 0x00
+#define COM14_CLK_DIV2 0x01
+#define COM14_CLK_DIV4 0x02
+#define COM14_CLK_DIV8 0x03
+#define COM14_CLK_DIV16 0x04
 #define REG_EDGE 0x3f      /* Edge enhancement factor */
 
 #define REG_COM15 0x40     /* Control 15 */
@@ -135,9 +140,14 @@
 #define REG_BRIGHT 0x55   /* Brightness */
 #define REG_CONTRAS 0x56  /* Contrast control */
 #define REG_GFIX 0x69     /* Fix gain control */
+#define REG_SCALING_XSC 0x70
+#define REG_SCALING_YSC 0x71
+
 #define REG_REG76 0x76    /* OV's name */
 #define R76_BLKPCOR 0x80  /* Black pixel correction enable */
 #define R76_WHTPCOR 0x40  /* White pixel correction enable */
+
+
 
 #define REG_RGB444 0x8c   /* RGB 444 control */
 #define RGB444_DEFAULT 0x00
@@ -170,6 +180,10 @@
 #define REG_GFI 0x69     /* Fix gain control */
 #define GGAIN 0x6a       /* G Channel AWB Gain */
 #define DBLV 0x6b
+#define DBLV_BYPASS 0x0
+#define DBLV_CLK4 0x40
+#define DBLV_CLK6 0x80
+#define DBLV_CLK8 0xc0
 #define AWBCTR3 0x6c /* AWB Control 3 */
 #define AWBCTR2 0x6d /* AWB Control 2 */
 #define AWBCTR1 0x6e /* AWB Control 1 */

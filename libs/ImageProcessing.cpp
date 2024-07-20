@@ -31,6 +31,10 @@ Mat::Mat(uint16_t width, uint16_t height, IMG_Type Itype)
     {
         this->data = Array<uint16_t>::createArray(width * height);
     }
+    else if (Itype == IMG_Type::RAW_DATA)
+    {
+        this->data8 = Array<uint8_t>::createArray(width * height*2);
+    }
 }
 
 Mat::~Mat()
