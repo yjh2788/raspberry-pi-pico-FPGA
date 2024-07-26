@@ -85,11 +85,12 @@ public:
     Mat getFrame(uint16_t width, uint16_t height, IMG_Type Itype);
     void print_RAW16bitdata(uint16_t width, uint16_t height);
     void print_RAW16bitdata2(uint16_t * buf);
-    void print_RAW8bitdata(uint8_t * buf);
+    void print_RAW8bitdata(uint8_t *buf);
+    void capure_8bitdata(uint8_t*buf);
     uint8_t get_word_data();
     uint8_t get_word_data2();
     uint8_t get_word_data3();
-    uint8_t sendCommand_regs(const uint8_t** src);
+    uint8_t sendCommand_regs(const uint8_t src[][2]);
     uint8_t sendCommand(const uint8_t* src);
     uint8_t sendCommand(const uint8_t reg, const uint8_t data);
     uint8_t readReg(const uint8_t reg);

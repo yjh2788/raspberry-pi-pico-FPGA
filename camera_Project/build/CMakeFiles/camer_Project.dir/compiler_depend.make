@@ -527,7 +527,15 @@ CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPG
   C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_irq/include/hardware/irq.h \
   C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/intctrl.h \
   C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/m0plus.h \
-  C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_watchdog/include/hardware/watchdog.h
+  C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_watchdog/include/hardware/watchdog.h \
+  C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/common/pico_divider/include/pico/divider.h \
+  C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_divider/include/hardware/divider.h \
+  C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_pwm/include/hardware/pwm.h \
+  C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/pwm.h \
+  C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/pwm.h \
+  C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_clocks/include/hardware/clocks.h \
+  C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/clocks.h \
+  C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/clocks.h
 
 CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/libs/ov7670.cpp.obj: C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/libs/ov7670.cpp \
   C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/libs/ov7670.h \
@@ -3776,6 +3784,8 @@ C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/pic
 
 C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/pico_fix/rp2040_usb_device_enumeration/include/pico/fix/rp2040_usb_device_enumeration.h:
 
+C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_divider/include/hardware/divider.h:
+
 C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/timer.h:
 
 C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_base/include/hardware/address_mapped.h:
@@ -4096,17 +4106,15 @@ C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardwar
 
 C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_watchdog/include/hardware/watchdog.h:
 
-C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/libs/ov7670_reg.h:
-
-C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/pwm.h:
-
-C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/i2c.h:
-
-C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/i2c.h:
+C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/common/pico_divider/include/pico/divider.h:
 
 C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/lib/tinyusb/src/tusb_option.h:
 
 C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_pwm/include/hardware/pwm.h:
+
+C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/i2c.h:
+
+C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/pwm.h:
 
 C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_sync/sync.c:
 
@@ -4117,6 +4125,10 @@ C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/har
 C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/clocks.h:
 
 C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/clocks.h:
+
+C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/libs/ov7670_reg.h:
+
+C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/i2c.h:
 
 C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/lib/tinyusb/src/class/audio/audio_device.c:
 

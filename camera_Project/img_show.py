@@ -1,31 +1,77 @@
 import numpy as np
 from PIL import Image
 import cv2
+from enum import Enum
 
+class imagetype(Enum):
+    RGB=1,
+    YUV=2
     # image resolution
 #width, height = 320, 240
 #width, #height = 176, 144
 # width, height = 160, 120
-def get_image_from_txtFile(width,height,path="raw data.txt",dtype=np.uint8):
-    #read data from file
-    with open(path, "r") as file:
-        data = file.read()
-    # extract pixel data
-    data_values = [int(val, 16) for val in data.split()]
-    #  pixel num
-    total_pixels = width * height
-    # empty array
-    image_array = np.zeros((height, width), dtype=np.uint16)
+
+def convert_8bit_to_16bit(input_file):
+    try:
+        with open(input_file, 'r') as file:
+            data = file.read().strip().split()
+            
+        if len(data) % 2 != 0:
+            data.append("0")
+            print("The number of 8-bit data is not even.")
+            #return
+
+        data_16bit = []
+        for i in range(0, len(data), 2):
+            high_byte = int(data[i], 16)
+            low_byte = int(data[i+1], 16)
+            combined = (high_byte << 8) | low_byte
+            data_16bit.append(f"{combined:04x}")
+        return data_16bit
+        # with open(output_file, 'w') as file:
+        #     file.write(' '.join(data_16bit))
+
+        
+    except FileNotFoundError:
+        print(f"File {input_file} not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def get_image_from_txtFile(width,height,path="raw data.txt",dtype=imagetype.RGB):
+    if dtype==imagetype.RGB:
+        data_values = convert_8bit_to_16bit(path)
+        d=np.uint16
+        total_pixels = width * height
+        image_array = np.zeros((height, width), dtype=d)
+    else: 
+        d=np.uint8
+        #read data from file
+        total_pixels = width * height*2
+        image_array = np.zeros((height, width*2), dtype=d)
+        with open(path, "r") as file:
+            data = file.read()
+            # extract pixel data
+            data_values = [int(val, 16) for val in data.split()]
+    # flat_data=np.array(data_values)
+    # # flat_data=flat_data.flatten().reshape((-1, 1)).view(d).flatten()
+    # return flat_data,len(data_values)
+    
     # data clipping
     for i, value in enumerate(data_values):
         if i >= total_pixels:
             break
-        row = i // width
-        col = i % width
-        image_array[row, col] = value
+        
+        if dtype==imagetype.RGB:
+            row = i // width
+            col = i % width
+            image_array[row, col] = int(value,16)
+        else: 
+            row = i // (width*2)
+            col = i % (width*2)
+            image_array[row, col] = value
         
     flat_data=image_array.flatten()
-    flat_data=flat_data.reshape((-1, 1)).view(dtype).flatten()
+    # flat_data=flat_data.reshape((-1, 1)).view(d).flatten()
     return flat_data,len(data_values)
 
 # RGB565 -> RGB888 
@@ -36,9 +82,9 @@ def rgb565_to_rgb8882(value):
     return (r, g, b)
 
 def rgb565_to_rgb888(value):
-    r = ((value & 0xf800) >> 11) <<3#* 255 // 31
-    g = ((value & 0x07e0) >> 5) <<2#* 255 // 63
-    b = (value & 0x001f) <<3#* 255 // 31
+    r = ((value & 0xf800) >> 11) * 255 // 31
+    g = ((value & 0x07e0) >> 5) * 255 // 63
+    b = (value & 0x001f) * 255 // 31
     return (r, g, b)
 
 

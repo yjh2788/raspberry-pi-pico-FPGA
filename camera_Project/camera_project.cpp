@@ -20,17 +20,11 @@ int main()
     blink(10);
     ov7670 cam(RAW_DATA);
     cam.ov7670_init(I2C,baud);
-    sleep_ms(1000);
-    blink(1);
     cam.setFormat(resolution::QQVGA);
-    sleep_ms(1000);
-    blink(2);
+    //cam.setImageType(IMG_Type::RGB565);
     cam.setImageType(IMG_Type::YUV);
-    sleep_ms(1000);
-    blink(3);
-    cam.sendCommand(REG_CLKRC,3);
-    sleep_ms(1000);
-    blink(4);
+    //cam.sendCommand(REG_CLKRC,3);
+
     //cam.setImageType(IMG_Type::RGB565);
     
     //Mat img = cam.getFrame();
@@ -39,6 +33,7 @@ int main()
     Array<uint8_t> buf;
     buf=buf.zeros(QQVGA_height*QQVGA_width*2);
     //cam.print_RAW16bitdata2(buf.getbuf());
+    //cam.capure_8bitdata(buf.getbuf());
     cam.print_RAW8bitdata(buf.getbuf());
     for(int i = 0;i<buf.size();i++)
     {

@@ -17,6 +17,8 @@
 
 
 extern bool debug;
+float measure_duty_cycle(uint gpio);
+int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int duty_cycle);
 void blink(int num);
 void debug_blink(int num);
 void reset_callback(uint gpio, uint32_t events);

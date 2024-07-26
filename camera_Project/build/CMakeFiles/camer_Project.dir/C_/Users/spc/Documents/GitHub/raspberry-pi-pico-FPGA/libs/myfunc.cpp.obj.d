@@ -177,4 +177,12 @@ CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPG
  C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\rp2_common\hardware_irq\include/hardware/irq.h \
  C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/intctrl.h \
  C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/m0plus.h \
- C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\rp2_common\hardware_watchdog\include/hardware/watchdog.h
+ C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\rp2_common\hardware_watchdog\include/hardware/watchdog.h \
+ C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\common\pico_divider\include/pico/divider.h \
+ C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\rp2_common\hardware_divider\include/hardware/divider.h \
+ C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\rp2_common\hardware_pwm\include/hardware/pwm.h \
+ C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\rp2040\hardware_structs\include/hardware/structs/pwm.h \
+ C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/pwm.h \
+ C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\rp2_common\hardware_clocks\include/hardware/clocks.h \
+ C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\rp2040\hardware_structs\include/hardware/structs/clocks.h \
+ C\:\Users\spc\Documents\GitHub\raspberry-pi-pico-FPGA\pico-sdk\src\rp2040\hardware_regs\include/hardware/regs/clocks.h

@@ -6,11 +6,76 @@
 #include "hardware/gpio.h"
 #include "hardware/irq.h"
 #include "hardware/watchdog.h"
+#include "pico/divider.h"
+#include "hardware/pwm.h"
+#include "hardware/clocks.h"
 
 // #include "hardware_watchdog/include/hardware/watchdog.h"
 // #include "hardware_gpio/include/hardware/gpio.h"
 
 bool debug=true;
+
+
+
+int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, 
+                          int duty_cycle)
+{
+
+    uint8_t clk_divider = 0;
+    uint32_t wrap = 0;
+    uint32_t clock_div = 0;
+    uint32_t clock = clock_get_hz(clk_sys);
+
+    if(freq < 8 && 125000000> clock)
+       /* This is the frequency range of generating a PWM 
+       in RP2040 at 125MHz */
+        return -1;
+
+    for(clk_divider = 1; clk_divider < UINT8_MAX; clk_divider++)
+    {
+        /* Find clock_division to fit current frequency */
+        clock_div = div_u32u32( clock, clk_divider );
+        wrap = div_u32u32(clock_div, freq);
+        if (div_u32u32 (clock_div, UINT16_MAX) <= freq && wrap <= UINT16_MAX)
+        {
+            break;
+        }
+    }
+    if(clk_divider < UINT8_MAX)
+    {
+        /* Only considering whole number division */
+        pwm_set_clkdiv_int_frac(slice_num, clk_divider, 0);
+        pwm_set_enabled(slice_num, true);
+        pwm_set_wrap(slice_num, (uint16_t) wrap);
+        pwm_set_chan_level(slice_num, chan, 
+                          (uint16_t) div_u32u32((((uint16_t)(duty_cycle == 100? 
+                          (wrap + 1) : wrap)) * duty_cycle), 100));
+    }
+    else
+        return -2;
+
+    return 1;
+}
+
+float measure_duty_cycle(uint gpio) {
+    // Only the PWM B pins can be used as inputs.
+    assert(pwm_gpio_to_channel(gpio) == PWM_CHAN_B);
+    uint slice_num = pwm_gpio_to_slice_num(gpio);
+
+    // Count once for every 100 cycles the PWM B input is high
+    pwm_config cfg = pwm_get_default_config();
+    pwm_config_set_clkdiv_mode(&cfg, PWM_DIV_B_HIGH);
+    pwm_config_set_clkdiv(&cfg, 100);
+    pwm_init(slice_num, &cfg, false);
+    gpio_set_function(gpio, GPIO_FUNC_PWM);
+
+    pwm_set_enabled(slice_num, true);
+    sleep_ms(10);
+    pwm_set_enabled(slice_num, false);
+    float counting_rate = clock_get_hz(clk_sys) / 100;
+    float max_possible_count = counting_rate * 0.01;
+    return pwm_get_counter(slice_num) / max_possible_count;
+}
 
 void pinMode(int led_pin, int mode)
 {

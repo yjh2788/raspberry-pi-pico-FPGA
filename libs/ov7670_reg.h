@@ -142,6 +142,9 @@
 #define REG_GFIX 0x69     /* Fix gain control */
 #define REG_SCALING_XSC 0x70
 #define REG_SCALING_YSC 0x71
+#define REG_SCALING_DCWCTR 0x72
+#define REG_SCALING_PCLK_DIV 0x73
+#define REG_SCALING_PCLK_DELAY 0xA2
 
 #define REG_REG76 0x76    /* OV's name */
 #define R76_BLKPCOR 0x80  /* Black pixel correction enable */
