@@ -80,7 +80,7 @@ const uint8_t qvga_ov7670[][2] = {
 };
 
 const uint8_t qqvga_ov7670[][2] = {
-    {REG_CLKRC,0x01},
+    {REG_CLKRC,0x00},
     {REG_COM7,COM7_FMT_VGA},
     {REG_COM3,COM3_DCWEN},
 	{REG_COM14, 0x1a},	// divide by 4
@@ -88,9 +88,9 @@ const uint8_t qqvga_ov7670[][2] = {
     {REG_SCALING_YSC,0x35},
 	{REG_SCALING_DCWCTR, 0x22},		// downsample by 4
 	{REG_SCALING_PCLK_DIV, 0xf2},		// divide by 4 
-	{REG_SCALING_PCLK_DELAY, 0x02},
+	{REG_SCALING_PCLK_DELAY, 0x00},
     {REG_HSTART,0x16},
-	{REG_HSTOP,0x04},
+	{REG_HSTOP,0x04 },
 	{REG_HREF,0xa4},		//a4   
 	{REG_VSTART,0x02},
 	{REG_VSTOP,0x7a},
@@ -628,7 +628,7 @@ const uint8_t reg_vals4[][2] = {
 	/* AGC and AEC parameters.  Note we start by disabling those features,
 	   then turn them only after tweaking the values. */
 	{REG_COM8, COM8_FASTAEC | COM8_AECSTEP},
-	{REG_GAIN, 0},	{REG_AECH, 0},
+	
 	{REG_COM4, 0x40}, /* magic reserved bit */
 	{REG_COM9, 0x18}, /* 4x gain + magic rsvd bit */
 	{REG_BD50MAX, 0x05},	{REG_BD60MAX, 0x07},
@@ -666,8 +666,14 @@ const uint8_t reg_vals4[][2] = {
 	{0x5d, 0x49},		{0x5e, 0x0e},
 	{0x6c, 0x0a},		{0x6d, 0x55},
 	{0x6e, 0x11},		{0x6f, 0x9e}, /* it was 0x9F "9e for advance AWB" */
-	{0x6a, 0x40},		{REG_BLUE, 0x40},
-	{REG_RED, 0x60},
+	{0x6a, 0x40},	
+
+	//gain	
+	{REG_BLUE, 0x80/*0x40*/},
+	{REG_RED, 0x80/*0x06*/},
+	{REG_GAIN,0x10}, 	{REG_AECH, 0x10},
+	//{REG_GAIN, 0},	{REG_AECH, 0},
+	//
 	{REG_COM8, COM8_FASTAEC|COM8_AECSTEP|COM8_AGC|COM8_AEC|COM8_AWB},
 
 	/* Matrix coefficients */

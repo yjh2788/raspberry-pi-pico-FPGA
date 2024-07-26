@@ -1834,9 +1834,9 @@ Discarded input sections
                 0x00000000       0x48 CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.obj
  .data.i2c1_inst
                 0x00000000        0x8 CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.obj
- .text          0x00000000        0x0 C:\Users\spc\AppData\Local\Temp\cc3eyDSl.o
- .data          0x00000000        0x0 C:\Users\spc\AppData\Local\Temp\cc3eyDSl.o
- .bss           0x00000000        0x0 C:\Users\spc\AppData\Local\Temp\cc3eyDSl.o
+ .text          0x00000000        0x0 C:\Users\spc\AppData\Local\Temp\ccE4ZBGW.o
+ .data          0x00000000        0x0 C:\Users\spc\AppData\Local\Temp\ccE4ZBGW.o
+ .bss           0x00000000        0x0 C:\Users\spc\AppData\Local\Temp\ccE4ZBGW.o
  .text          0x00000000        0x0 c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libstdc++.a(guard.o)
  .data          0x00000000        0x0 c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libstdc++.a(guard.o)
  .bss           0x00000000        0x0 c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libstdc++.a(guard.o)
@@ -19851,7 +19851,7 @@ LOAD c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../
 .boot2          0x10000000      0x100
                 0x10000000                __boot2_start__ = .
  *(.boot2)
- .boot2         0x10000000      0x100 C:\Users\spc\AppData\Local\Temp\cc3eyDSl.o
+ .boot2         0x10000000      0x100 C:\Users\spc\AppData\Local\Temp\ccE4ZBGW.o
                 0x10000100                __boot2_end__ = .
                 0x00000001                ASSERT (((__boot2_end__ - __boot2_start__) == 0x100), ERROR: Pico second stage bootloader must be 256 bytes in size)
 
@@ -29675,7 +29675,7 @@ LOAD c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../
 
 .binary_info    0x10053cb0       0x24
  *(.binary_info.keep.*)
- .binary_info.keep.__bi_ptr845
+ .binary_info.keep.__bi_ptr851
                 0x10053cb0        0x4 CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/libs/ov7670.cpp.obj
  .binary_info.keep.__bi_ptr22
                 0x10053cb4        0x4 CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/pico_standard_link/binary_info.c.obj
@@ -29795,7 +29795,7 @@ LOAD c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../
  *(.data*)
  .data          0x200014a0        0x4 c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/thumb/v6-m/nofp/crtbegin.o
                 0x200014a0                __dso_handle
- .data._ZZN6ov767011ov7670_initEP8i2c_instmE8__bi_845
+ .data._ZZN6ov767011ov7670_initEP8i2c_instmE8__bi_851
                 0x200014a4        0x8 CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/libs/ov7670.cpp.obj
  .data.debug    0x200014ac        0x1 CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/libs/myfunc.cpp.obj
                 0x200014ac                debug
@@ -30097,7 +30097,7 @@ LOAD c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../
                 0x20002444        0x4 c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libstdc++.a(locale_init.o)
  .bss._ZGVZN12_GLOBAL__N_122get_locale_cache_mutexEvE18locale_cache_mutex
                 0x20002448        0x4 c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libstdc++.a(locale.o)
- .bss._ZGVZN6ov767011ov7670_initEP8i2c_instmE8__bi_845
+ .bss._ZGVZN6ov767011ov7670_initEP8i2c_instmE8__bi_851
                 0x2000244c        0x4 CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/libs/ov7670.cpp.obj
  .bss._ZL10eh_globals
                 0x20002450        0xc c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libstdc++.a(eh_globals.o)
@@ -30675,7 +30675,7 @@ LOAD CMakeFiles/camer_Project.dir/a67114961f92124d5313900ddcc8a6e0/pico-sdk/src/
 LOAD CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.obj
 LOAD CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_flash/flash.c.obj
 LOAD CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.obj
-LOAD C:\Users\spc\AppData\Local\Temp\cc3eyDSl.o
+LOAD C:\Users\spc\AppData\Local\Temp\ccE4ZBGW.o
 LOAD c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libstdc++.a
 LOAD c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libm.a
 START GROUP
@@ -30803,7 +30803,7 @@ LOAD linker stubs
  .ARM.attributes
                 0x000008b0       0x2c CMakeFiles/camer_Project.dir/C_/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.obj
  .ARM.attributes
-                0x000008dc       0x22 C:\Users\spc\AppData\Local\Temp\cc3eyDSl.o
+                0x000008dc       0x22 C:\Users\spc\AppData\Local\Temp\ccE4ZBGW.o
  .ARM.attributes
                 0x000008fe       0x2c c:/progra~2/gnuarm~1/102020~1/bin/../lib/gcc/arm-none-eabi/10.2.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp\libstdc++.a(guard.o)
  .ARM.attributes
