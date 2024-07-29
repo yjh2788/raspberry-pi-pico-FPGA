@@ -21,9 +21,8 @@ class Mat
 public:
     int16_t cols;
     int16_t rows;
-    Array<uint16_t> data;
     Array<uint8_t> gray;
-    Array<uint8_t> data8;
+    Array<uint8_t> data;
     Array<uint8_t> red;
     Array<uint8_t> green;
     Array<uint8_t> blue;

@@ -8,6 +8,7 @@ template<typename T>
 class Array {
 public:
     Array(size_t size);
+    Array(size_t size, int num);
     Array();
     ~Array();
 

@@ -16,25 +16,30 @@ int main()
     stdio_init_all();
     //reset_IRQ_init(default_reset_Pin);
     debug=false;
-    
+
     blink(10);
     ov7670 cam(RAW_DATA);
     cam.ov7670_init(I2C,baud);
-    cam.setFormat(resolution::QQVGA);
-    //cam.setImageType(IMG_Type::RGB565);
+    cam.setResolution(resolution::QQVGA);
     cam.setImageType(IMG_Type::YUV);
-    //cam.sendCommand(REG_CLKRC,3);
-
     //cam.setImageType(IMG_Type::RGB565);
-    
-    //Mat img = cam.getFrame();
-   // int num = img.data8.size();
-    //printf("num=%d\n",num);
-    Array<uint8_t> buf;
-    buf=buf.zeros(QQVGA_height*QQVGA_width*2);
-    //cam.print_RAW16bitdata2(buf.getbuf());
-    //cam.capure_8bitdata(buf.getbuf());
-    cam.print_RAW8bitdata(buf.getbuf());
+    int w = QQVGA_width;
+    int h = QQVGA_height;
+
+    Array<uint8_t> buf(w * h * 2, 0);
+    if (cam.m_resolution == QQVGA) {    
+        cam.getRawData<QQVGA_width, QQVGA_height>(buf.getbuf());
+    }else if (cam.m_resolution == QVGA) {
+        cam.getRawData<QVGA_width, QVGA_height>(buf.getbuf());
+    } else if (cam.m_resolution == VGA) {
+        cam.getRawData<VGA_width, VGA_height>(buf.getbuf());
+    } else if (cam.m_resolution == CIF) {
+        cam.getRawData<CIF_width, CIF_height>(buf.getbuf());
+    } else if (cam.m_resolution == QCIF) {
+        cam.getRawData<QCIF_width, QCIF_height>(buf.getbuf());
+    }
+
+
     for(int i = 0;i<buf.size();i++)
     {
         printf("%x ",buf[i]);

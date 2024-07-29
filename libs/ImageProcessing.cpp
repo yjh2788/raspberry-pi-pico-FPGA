@@ -14,7 +14,7 @@ Mat::Mat(uint16_t width, uint16_t height, IMG_Type Itype)
     this->img_type = Itype;
     if (Itype == IMG_Type::RGB565)
     {
-        this->data = Array<uint16_t>::createArray(width * height);
+        this->data = Array<uint8_t>::createArray(width * height*2);
     }
     else if ((Itype == IMG_Type::RGB888))
     {
@@ -29,11 +29,11 @@ Mat::Mat(uint16_t width, uint16_t height, IMG_Type Itype)
     }
     else if (Itype == IMG_Type::YUV)
     {
-        this->data = Array<uint16_t>::createArray(width * height);
+        this->data = Array<uint8_t>::createArray(width * height*2);
     }
     else if (Itype == IMG_Type::RAW_DATA)
     {
-        this->data8 = Array<uint8_t>::createArray(width * height*2);
+        this->data = Array<uint8_t>::createArray(width * height*2);
     }
 }
 

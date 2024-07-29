@@ -49,8 +49,7 @@ enum resolution
     QCIF = 4  // 176 x 144 //YCbCr
 };
 
-class ov7670
-{
+class ov7670{
 public:
     uint m_SCL;
     uint m_SDA;
@@ -68,35 +67,89 @@ public:
     uint m_D7;
     Mat m_img;
     i2c_inst_t *m_i2c = nullptr;
-
-    uint32_t pin_mask;
-    uint32_t data_mask;
-    uint8_t ov7670_address;
     uint8_t m_resolution=QVGA;
     uint8_t m_img_format=RGB565;
  
     ov7670();
     ov7670(IMG_Type Itype);
     ov7670(uint width, uint height, IMG_Type Itype);
+    void ov7670_xclk_init(uint freq,int duty);
     void ov7670_pin_init();
     void ov7670_init(i2c_inst_t *i2c, uint32_t baudrate);
+    template<int width,int height>
+    void getRawData(uint8_t *buf);
+    template<int width,int height>
     Mat getFrame();
-    Mat getFrame2();
-    Mat getFrame(uint16_t width, uint16_t height, IMG_Type Itype);
-    void print_RAW16bitdata(uint16_t width, uint16_t height);
-    void print_RAW16bitdata2(uint16_t * buf);
-    void print_RAW8bitdata(uint8_t *buf);
-    void capure_8bitdata(uint8_t*buf);
-    uint8_t get_word_data();
-    uint8_t get_word_data2();
-    uint8_t get_word_data3();
     uint8_t sendCommand_regs(const uint8_t src[][2]);
     uint8_t sendCommand(const uint8_t* src);
     uint8_t sendCommand(const uint8_t reg, const uint8_t data);
     uint8_t readReg(const uint8_t reg);
-    void setFormat(resolution res);
+    void setResolution(resolution res);
     void setImageType(IMG_Type Itype);
+
+private:
+    uint32_t pin_mask;
+    uint32_t data_mask;
+    uint8_t get_word_data();
+    uint8_t get_word_data2();
+    uint8_t get_word_data3();
 };
 
+/// @brief width, height should be declared as a constant because of timing issue depends on compiler optimization
+///        if widh, height is declared as variable, there might be timing issue when to read data from ov7670
+/// @tparam width 
+/// @tparam height 
+/// @param buf 
+template<int width,int height>
+void ov7670::getRawData(uint8_t * buf)
+{
+    while (!(gpio_get(m_VS)));//wait for 1
+    while ((gpio_get(m_VS)));//wait for 0
+    while (!(gpio_get(m_VS)));//wait for 1
+    while ((gpio_get(m_VS)));//wait for 0
 
+    for(int i = 0; i < height; i++)
+    {
+        // wait until horizontal data start
+        while (!(gpio_get(m_HS)));//wait for 1
+        for(int j = 0; j < width * 2; j++)
+        {
+            while((gpio_get(m_PLK)));
+            *buf++ = get_word_data(); // high
+            while(!(gpio_get(m_PLK)));
+        }
+        while ((gpio_get(m_HS)));
+    }
+}
+
+template<int width,int height>
+Mat ov7670::getFrame()
+{
+    Mat img;
+    uint8_t *buf=img.data.getbuf();
+    while (!(gpio_get(m_VS)));//wait for 1
+    while ((gpio_get(m_VS)));//wait for 0
+    while (!(gpio_get(m_VS)));//wait for 1
+    while ((gpio_get(m_VS)));//wait for 0
+
+    for(int i = 0; i < height; i++)
+    {
+        // wait until horizontal data start
+        while (!(gpio_get(m_HS)));//wait for 1
+        for(int j = 0; j < width * 2; j++)
+        {
+            while((gpio_get(m_PLK)));
+            *buf++ = get_word_data(); // high
+            while(!(gpio_get(m_PLK)));
+        }
+        while ((gpio_get(m_HS)));
+    }
+    return img;
+}
+
+// //template function decared
+// template void ov7670::print_RAW8bitdata<QVGA_height, QVGA_width>(uint8_t*);
+// template void ov7670::print_RAW8bitdata<VGA_height, VGA_width>(uint8_t*);
+// template void ov7670::print_RAW8bitdata<CIF_height, CIF_width>(uint8_t*);
+// template void ov7670::print_RAW8bitdata<QCIF_height, QCIF_width>(uint8_t*);
 #endif

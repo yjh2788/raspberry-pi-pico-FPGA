@@ -45,6 +45,21 @@ Array<T>::Array(size_t size) {
 }
 
 template<typename T>
+Array<T>::Array(size_t size, int num) {
+    _size = size;
+    data = (T*)malloc(sizeof(T)*size);//new T[size];  // memory allocation
+    if (data == nullptr) {
+        //std::cerr << "Memory allocation failed" << std::endl;
+        _size = 0;
+    }
+    for(int i=0;i<_size;i++)
+    {
+        data[i]=num;
+    }
+    
+}
+
+template<typename T>
 Array<T>::Array() {
     _size = 0;
     data = nullptr;

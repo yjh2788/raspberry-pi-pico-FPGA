@@ -20,7 +20,10 @@
         "typeinfo": "cpp",
         "pwm.h": "c",
         "system_error": "cpp",
-        "irq.h": "c"
+        "irq.h": "c",
+        "array": "cpp",
+        "string": "cpp",
+        "string_view": "cpp"
     },
     "cmake.sourceDirectory": "C:/Users/spc/Documents/GitHub/raspberry-pi-pico-FPGA/camera_Project"
 }
