@@ -3,6 +3,7 @@
 .pico-sdk/
 .camera_Projecct/out/
 .camera_Projecct/build/
+*.pyc
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++
