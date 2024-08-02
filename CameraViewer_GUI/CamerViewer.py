@@ -1,11 +1,15 @@
 import sys
 import cv2
+import glob
+import os
+import time
 import numpy as np
 from enum import Enum
 import serial
-import time
+
 from img_show import *
 from Worker import *
+
 
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale, QThread, Signal,
     QMetaObject, QObject, QPoint, QRect,
@@ -33,7 +37,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(831, 418)
+        MainWindow.resize(820, 418)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.comboBox_port = QComboBox(self.centralwidget)
@@ -66,13 +70,13 @@ class Ui_MainWindow(object):
         self.pushButton_save_dir.setGeometry(QRect(500, 20, 81, 31))
         self.textEdit_path = QTextEdit(self.centralwidget)
         self.textEdit_path.setObjectName(u"textEdit_path")
-        self.textEdit_path.setGeometry(QRect(590, 20, 191, 31))
+        self.textEdit_path.setGeometry(QRect(590, 20, 221, 31))
         self.pushButton_get_frames = QPushButton(self.centralwidget)
         self.pushButton_get_frames.setObjectName(u"pushButton_get_frames")
         self.pushButton_get_frames.setGeometry(QRect(500, 320, 111, 41))
         self.pushButton_open_port = QPushButton(self.centralwidget)
         self.pushButton_open_port.setObjectName(u"pushButton_open_port")
-        self.pushButton_open_port.setGeometry(QRect(740, 60, 71, 71))
+        self.pushButton_open_port.setGeometry(QRect(740, 60, 71, 31))
         self.label_resolution = QLabel(self.centralwidget)
         self.label_resolution.setObjectName(u"label_resolution")
         self.label_resolution.setGeometry(QRect(500, 180, 81, 31))
@@ -93,10 +97,13 @@ class Ui_MainWindow(object):
         self.label_img.setObjectName(u"label_img")
         self.label_img.setGeometry(QRect(10, 10, 480, 360))
         self.label_img.setFrameShape(QFrame.Panel)
+        self.pushButton_close_port = QPushButton(self.centralwidget)
+        self.pushButton_close_port.setObjectName(u"pushButton_close_port")
+        self.pushButton_close_port.setGeometry(QRect(740, 100, 71, 31))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 831, 22))
+        self.menubar.setGeometry(QRect(0, 0, 820, 22))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -120,6 +127,7 @@ class Ui_MainWindow(object):
         self.label_resolution.setText(QCoreApplication.translate("MainWindow", u"Resolution", None))
         self.label_Format.setText(QCoreApplication.translate("MainWindow", u"Format", None))
         self.label_img.setText("")
+        self.pushButton_close_port.setText(QCoreApplication.translate("MainWindow", u"close Port", None))
     # retranslateUi
 
 
@@ -141,14 +149,16 @@ class Ui_MainWindow(object):
         self.m_resolution=resolution[res]
         
         self.pushButton_open_port.clicked.connect(self.open_port)
+        self.pushButton_close_port.clicked.connect(self.close_port)
         #self.pushButton_get_frame.clicked.connect(self.getframe)
         self.pushButton_get_frame.clicked.connect(lambda: self.start_task(mode.getframe,self.port_enable,self.m_serial,self.m_width,self.m_height,self.m_format))
+        self.pushButton_get_frames.clicked.connect(lambda: self.start_task(mode.getframes,self.port_enable,self.m_serial,self.m_width,self.m_height,self.m_format))
+        self.pushButton_stop_frame.clicked.connect(self.stop_frame)
         self.comboBox_Format.currentIndexChanged.connect(self.Format_change)
         self.comboBox_resolution.currentIndexChanged.connect(self.resolution_change)
-        #self.pushButton_get_frames.clicked.connect()
-        #self.pushButton_stop_frame.clicked.connect()
+        
         self.pushButton_save_image.clicked.connect(self.save_image_to_file)
-        #self.pushButton_save_dir.clicked.connect()
+        self.pushButton_save_dir.clicked.connect(self.set_path)
     
     #-------------------------------------------------Meltithread functions-----------------------------------------------------#
     def start_task(self,mode,*args,**kwargs):
@@ -163,21 +173,28 @@ class Ui_MainWindow(object):
         self.worker.finished.connect(self.task_finished)
         self.worker.start()
 
-
-
     def task_finished(self):
         self.worker_running = False
         #QMessageBox.information(self.centralwidget, "Task Finished", "The task has been completed.")
-        
-    
     #------------------------------------------------callback functions---------------------------------------------------------#    
     def save_image_to_file(self):
+        path=self.textEdit_path.toPlainText()
+        pixmap = self.label_img.pixmap()
+        if pixmap:
+            # Save QPixmap as PNG
+            fnum=count_png_files_in_directory(path)+1
+            pixmap.save(path+f"/{fnum}.PNG", 'PNG')
+            QMessageBox.information(self.centralwidget, "success", f"Image is successfully saved in {path}/{fnum}.PNG.")
+        else:
+            QMessageBox.warning(self.centralwidget, "No image", "There is no image.")
+            
+    def set_path(self):
         initial_dir = "C:/Users/spc/Desktop/"
         options = QFileDialog.Options()
-        file_name, _ = QFileDialog.getSaveFileName(self.centralwidget, "Save Image", initial_dir, "PNG Files (*.png);;All Files (*)", options=options)
+        file_name = QFileDialog.getExistingDirectory(self.centralwidget, "set save path", initial_dir, options=options)
         if file_name:
             self.textEdit_path.setText(file_name)
-            
+    
     def open_port(self):
         
         if self.worker_running:
@@ -185,9 +202,9 @@ class Ui_MainWindow(object):
             return
         
         #in case of serial port is opened
-        if self.m_serial!=None:
-            if self.m_serial.is_open or self.port_enable==True:
-                self.m_serial.close()
+        if self.port_enable:
+            QMessageBox.warning(self.centralwidget, "Port opened", "Port is opened. Disconnect Port first")
+            return
             
         port=self.comboBox_port.currentText()
         baud=self.comboBox_baud.currentText()
@@ -199,7 +216,27 @@ class Ui_MainWindow(object):
             QMessageBox.warning(self.centralwidget,"warning",f"Could not open serial port {port}:\n{e}")
         else:
             self.port_enable=True
-            QMessageBox.warning(self.centralwidget,"warning",f"successfully opened serial port {port}")
+            QMessageBox.warning(self.centralwidget,"success",f"successfully opened serial port {port}")
+    
+    def close_port(self):
+        if self.worker_running:
+            QMessageBox.warning(self.centralwidget, "Task Running", "A task is already running. Please wait for it to complete.")
+            return
+        #in case of serial port is opened
+        try:
+            if self.m_serial is not None:
+                if self.m_serial.is_open or self.port_enable:
+                    self.m_serial.close()
+                    self.port_enable=False
+                    QMessageBox.warning(self.centralwidget, "success", "Port is closed successfully")
+                else: 
+                    QMessageBox.warning(self.centralwidget, "warning", "There is no opened Port.")
+            else:
+                QMessageBox.warning(self.centralwidget, "warning", "There is no opened Port.")
+        
+        except Exception as e:
+            self.error.emit(f"An error occurred: {str(e)}")
+        
         
     def getframe(self):
         if self.port_enable==False or self.m_serial==None:
@@ -259,6 +296,10 @@ class Ui_MainWindow(object):
         scaled_pixmap = pixmap.scaled(self.label_img.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
         self.label_img.setPixmap(scaled_pixmap)
         
+    def stop_frame(self):
+       global STOP_FRAME 
+       STOP_FRAME.set()
+    
     def Format_change(self):
         fmt=self.comboBox_Format.currentText()
         self.m_format=imagetype[fmt]
@@ -282,10 +323,20 @@ class Ui_MainWindow(object):
               
 #----------------------------------normal functions--------------------------------------------------#            
     def messagebox(self,message):
-            QMessageBox.information(self.centralwidget,"message",message)
+        QMessageBox.information(self.centralwidget,"message",message)
 
     def handle_error(self, message):
-        QMessageBox.warning(self.centralwidget, "Warning", message)       
+        QMessageBox.warning(self.centralwidget, "Warning", message)   
+        
+def count_png_files_in_directory(directory_path):
+    try:
+        # Find PNG files
+        file_pattern = os.path.join(directory_path, '*.png')
+        png_files = glob.glob(file_pattern)
+        return len(png_files)
+    except Exception as e:
+        print(f"Error: {e}")
+        return 0  
         
 if __name__=="__main__":
     app = QApplication.instance()
