@@ -196,6 +196,15 @@ void debug_blink(int num)
         }
     }
 }
+void print_data(size_t size, uint8_t*buf)
+{
+    printf("start\n");
+    for(int i = 0;i< size; i++)
+    {
+        printf("%x ",buf[i]);
+    }
+    printf("\nfinish");
+}
 
 void reset_callback(uint gpio, uint32_t events)
 {

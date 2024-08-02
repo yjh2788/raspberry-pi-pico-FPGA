@@ -21,6 +21,7 @@ float measure_duty_cycle(uint gpio);
 int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq, int duty_cycle);
 void blink(int num);
 void debug_blink(int num);
+void print_data(size_t size, uint8_t*buf);
 void reset_callback(uint gpio, uint32_t events);
 void reset_IRQ_init(uint pin=default_reset_Pin);
 void debug_print(bool debug, const char *fmt, ...);

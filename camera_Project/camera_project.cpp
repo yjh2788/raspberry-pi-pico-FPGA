@@ -25,25 +25,26 @@ int main()
     //cam.setImageType(IMG_Type::RGB565);
     int w = QQVGA_width;
     int h = QQVGA_height;
+    int buf_size=w * h * 2;
+    Array<uint8_t> buf(buf_size, 0);
 
-    Array<uint8_t> buf(w * h * 2, 0);
-    if (cam.m_resolution == QQVGA) {    
-        cam.getRawData<QQVGA_width, QQVGA_height>(buf.getbuf());
-    }else if (cam.m_resolution == QVGA) {
-        cam.getRawData<QVGA_width, QVGA_height>(buf.getbuf());
-    } else if (cam.m_resolution == VGA) {
-        cam.getRawData<VGA_width, VGA_height>(buf.getbuf());
-    } else if (cam.m_resolution == CIF) {
-        cam.getRawData<CIF_width, CIF_height>(buf.getbuf());
-    } else if (cam.m_resolution == QCIF) {
-        cam.getRawData<QCIF_width, QCIF_height>(buf.getbuf());
-    }
-
-
-    for(int i = 0;i<buf.size();i++)
+    for(int i=0;i<10;i++)
     {
-        printf("%x ",buf[i]);
+        if (cam.m_resolution == QQVGA) {    
+        cam.getRawData<QQVGA_width, QQVGA_height>(buf.getbuf());
+        }else if (cam.m_resolution == QVGA) {
+            cam.getRawData<QVGA_width, QVGA_height>(buf.getbuf());
+        } else if (cam.m_resolution == VGA) {
+            cam.getRawData<VGA_width, VGA_height>(buf.getbuf());
+        } else if (cam.m_resolution == CIF) {
+            cam.getRawData<CIF_width, CIF_height>(buf.getbuf());
+        } else if (cam.m_resolution == QCIF) {
+            cam.getRawData<QCIF_width, QCIF_height>(buf.getbuf());
+        }
+        print_data(buf_size,buf.getbuf());
     }
+    
+    
     //printf("finished\n");
     // for (int i=0; i<num; i++)
     // {

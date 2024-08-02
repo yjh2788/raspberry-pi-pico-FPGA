@@ -30,10 +30,28 @@ def convert_8bit_to_16bit(input_file):
         return data_16bit
         # with open(output_file, 'w') as file:
         #     file.write(' '.join(data_16bit))
-
-        
     except FileNotFoundError:
         print(f"File {input_file} not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        
+def convert8bit_2_16bit(data):
+    try:
+        if len(data) % 2 != 0:
+            data.append("0")
+            print("The number of 8-bit data is not even.")
+            #return
+
+        data_16bit = []
+        for i in range(0, len(data), 2):
+            high_byte = int(data[i], 16)
+            low_byte = int(data[i+1], 16)
+            combined = (high_byte << 8) | low_byte
+            data_16bit.append(f"{combined:04x}")
+        return data_16bit
+        # with open(output_file, 'w') as file:
+        #     file.write(' '.join(data_16bit))
+
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -73,6 +91,39 @@ def get_image_from_txtFile(width,height,path="raw data.txt",dtype=imagetype.RGB)
     flat_data=image_array.flatten()
     # flat_data=flat_data.reshape((-1, 1)).view(d).flatten()
     return flat_data,len(data_values)
+
+def raw2Img(width, height, data, dtype=imagetype.RGB):
+    
+    if dtype==imagetype.RGB:
+        data_values = convert8bit_2_16bit(data)
+        d=np.uint16
+        total_pixels = width * height
+        image_array = np.zeros((height, width), dtype=d)
+    else: 
+        d=np.uint8
+        #read data from file
+        total_pixels = width * height*2
+        image_array = np.zeros((height, width*2), dtype=d)
+        # extract pixel data
+        data_values = data
+        
+    for i, value in enumerate(data_values):
+        if i >= total_pixels:
+            break
+        
+        if dtype==imagetype.RGB:
+            row = i // width
+            col = i % width
+            image_array[row, col] = int(value,16)
+        else: 
+            row = i // (width*2)
+            col = i % (width*2)
+            image_array[row, col] = value
+        
+    flat_data=image_array.flatten()
+    # flat_data=flat_data.reshape((-1, 1)).view(d).flatten()
+    return flat_data,len(data_values)
+    
 
 # RGB565 -> RGB888 
 def rgb565_to_rgb8882(value):
