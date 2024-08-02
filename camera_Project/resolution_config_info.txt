@@ -1,0 +1,7 @@
+QQVGA
+- xclk: 8000000
+- DBLV: clock x 4
+
+QVGA
+- xclk: 4000000
+- DBLV: clock x 4
