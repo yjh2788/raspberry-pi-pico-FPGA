@@ -8,6 +8,11 @@
 .SIMD_verilog/incremental_db/
 .SIMD_verilog/output_files/
 .SIMD_verilog/simulation/
+.SIMD_verilog/db
+.SIMD_verilog/.qsys_edit
+.SIMD_verilog/incremental_db
+.SIMD_verilog/output_files
+.SIMD_verilog/simulation
 *.pyc
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++
