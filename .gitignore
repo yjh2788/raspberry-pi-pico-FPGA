@@ -15,6 +15,42 @@
 .SIMD_verilog/simulation
 *.pyc
 
+##verilog hdl ####
+*.tdf
+*.qmsg
+*.cdb
+*.xml
+*.nlv
+*.hdb
+*.bpm
+*.logdb
+*.rdb
+*.hsd
+*.hif
+*.html
+*.hier_info
+*.ammdb
+*kpt
+*.flock
+*.ddb
+*.db_info
+*.nvd
+*.sci
+*.tdb
+*.bak
+*.tmw_info
+*.tcl
+*.var
+*.sh
+*.dfp
+*.rcfdb
+*.dpi
+*.hb_info
+*.sig
+
+
+
+
 # Created by https://www.toptal.com/developers/gitignore/api/c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++
 
@@ -289,3 +325,5 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+".SIMD_verilog/db/" 
+".SIMD_verilog/db/" 
