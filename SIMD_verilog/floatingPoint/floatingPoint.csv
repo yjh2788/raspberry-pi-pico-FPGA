@@ -1,0 +1,22 @@
+# system info floatingPoint on 2024.08.05.11:44:22
+system_info:
+name,value
+DEVICE,EP4CE22F17C6
+DEVICE_FAMILY,Cyclone IV E
+GENERATION_ID,1722825857
+#
+#
+# Files generated for floatingPoint on 2024.08.05.11:44:22
+files:
+filepath,kind,attributes,module,is_top
+simulation/floatingPoint.v,VERILOG,,floatingPoint,true
+simulation/submodules/fpoint2_combi.vhd,VHDL,,fpoint2_combi,false
+simulation/submodules/FPMinMaxFused/FPMinMaxFused.vhd,VHDL,,fpoint2_combi,false
+simulation/submodules/FPCompareFused/FPCompareFused.vhd,VHDL,,fpoint2_combi,false
+simulation/submodules/FPNeg_Abs/FPNeg.vhd,VHDL,,fpoint2_combi,false
+simulation/submodules/FPNeg_Abs/FPAbs.vhd,VHDL,,fpoint2_combi,false
+#
+# Map from instance-path to kind of module
+instances:
+instancePath,module
+floatingPoint.nios_custom_instr_floating_point_2_combi_0,fpoint2_combi
