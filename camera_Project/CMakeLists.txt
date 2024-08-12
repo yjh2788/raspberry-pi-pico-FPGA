@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories("${project_PATH}/libs/")
 pico_sdk_init()
-
+ 
 add_executable(${projname}
 
         camera_project.cpp
@@ -18,10 +18,11 @@ add_executable(${projname}
         "${project_PATH}/libs/ImageProcessing.cpp"
         "${project_PATH}/libs/myfunc.cpp"
         "${project_PATH}/libs/Array.cpp"
+        "${project_PATH}/libs/TFT.cpp"
         )
 pico_enable_stdio_usb(${projname} 1)
 pico_enable_stdio_uart(${projname} 0)
-target_link_libraries(${projname} pico_stdlib pico_stdio_usb hardware_i2c hardware_pwm hardware_clocks hardware_irq hardware_watchdog)
+target_link_libraries(${projname} pico_stdlib pico_stdio_usb hardware_i2c hardware_spi hardware_pwm hardware_clocks hardware_irq hardware_watchdog)
 pico_add_extra_outputs(${projname})
 
 

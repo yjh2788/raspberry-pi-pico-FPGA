@@ -3,9 +3,6 @@
 #include "hardware/clocks.h"
 #include "myfunc.h"
 
-#define MHz 1000000
-#define KHz 1000
-
 const uint8_t vga_ov7670[][2] = {
     {REG_CLKRC,0x01},
     {REG_COM7,COM7_FMT_VGA},
@@ -355,7 +352,7 @@ void ov7670::ov7670_pin_init()
     debug_print("%32b\n", MASK(m_D3));
     debug_print("%32b\n", MASK(m_D5));
     debug_print("%32b\n", MASK(m_D7));
-    blink(15);
+    //blink(15);
     gpio_init_mask(this->pin_mask);
     gpio_set_dir(m_SCL, GPIO_OUT);
     gpio_set_dir(m_SDA, GPIO_OUT); // INOUT

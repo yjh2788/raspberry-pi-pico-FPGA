@@ -12,6 +12,23 @@
 
 // #include "hardware_watchdog/include/hardware/watchdog.h"
 // #include "hardware_gpio/include/hardware/gpio.h"
+Rect::Rect()
+{
+
+}
+Rect::Rect(int x, int y, int width, int hegiht)
+{
+    this->x = x;
+    this->y = y;
+    this->width = width;
+    this->height = height;
+}
+
+
+Rect::~Rect()
+{
+
+}
 
 bool debug=true;
 
