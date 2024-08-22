@@ -195,6 +195,8 @@ void TFT_LCD::init(spi_inst_t *spi, uint32_t baud) /* initialize TFT-LCD with HX
 {
   m_spi = spi;
   m_baud = baud;
+  m_degree=TFT_degree90;
+  m_color=TFT_RGB;
 
   spi_init(m_spi, m_baud);
 
@@ -223,32 +225,6 @@ void TFT_LCD::init(spi_inst_t *spi, uint32_t baud) /* initialize TFT-LCD with HX
   gpio_put(TFT_RST, 1);
   // Make the CS pin available to picotool
   bi_decl(bi_1pin_with_name(TFT_CS, "SPI CS"));
-
-  // HX8357D
-  //  int i=0;
-  //  cs_select();
-  //  while (i < sizeof(HX8357D_regValues))
-  //  {
-  //  	uint8_t r = HX8357D_regValues[i++];
-  //  	uint8_t len = HX8357D_regValues[i++];
-  //  	if (r == TFTLCD_DELAY)
-  //  	{
-  //  		sleep_us(len);
-  //  	}
-  //  	else
-  //  	{
-  //  		cs_select();
-  //      DC_COMMAND();
-  //      spi_transfer_byte(r);
-  //      DC_DATA();
-  //  		for (uint8_t d = 0; d < len; d++)
-  //  		{
-  //  			uint8_t x = HX8357D_regValues[i++];
-  //  			spi_transfer_byte(x);
-  //  		}
-  //  		cs_deselect();
-  //  	}
-  //  }
 
   sendByte(HX8357_SWRESET, 0x01); // window setting
   sleep_ms(10);
@@ -293,7 +269,7 @@ void TFT_LCD::init(spi_inst_t *spi, uint32_t baud) /* initialize TFT-LCD with HX
   sendDataWord(0x0001);
 
   sendByte(HX8357_COLMOD, 0x55);
-  sendByte(HX8357_MADCTL, 0x28);
+  sendByte(HX8357_MADCTL, 0x20);
   sendByte(HX8357_TEON, 0x00);
   sendByte(HX8357_TEARLINE, 0x0002);
   sendByte(HX8357_SLPOUT, 0x11);
@@ -303,23 +279,42 @@ void TFT_LCD::init(spi_inst_t *spi, uint32_t baud) /* initialize TFT-LCD with HX
 /* ---------------------------------------------------------------------------- */
 /*	 출력제어 함수					*/
 /* ---------------------------------------------------------------------------- */
+void TFT_LCD::setBGR()
+{
+  uint8_t madctl=m_degree|TFT_BGR;
+  sendcommand(HX8357_MADCTL);
+  sendDataByte(madctl);  
+  m_color=TFT_BGR;
+}
+void TFT_LCD::setRGB()
+{
+  uint8_t madctl=m_degree|TFT_RGB;
+  sendcommand(HX8357_MADCTL);
+  sendDataByte(madctl);  
+  m_color=TFT_RGB;
 
+}
 void TFT_LCD::setRotation(uint8_t m)
 {
   uint8_t madctl = 0;
+
   switch (m)
   {
   case 0:
-    madctl = 0x48; // 0 degree rotation (default)
+    madctl = TFT_degree0|m_color; // 0 degree rotation (default)
+    m_degree=TFT_degree0;
     break;
   case 1:
-    madctl = 0x28; // 90 degree rotation
+    madctl = TFT_degree90|m_color; // 90 degree rotation
+    m_degree=TFT_degree90;
     break;
   case 2:
-    madctl = 0x88; // 180 degree rotation
+    madctl = TFT_degree180|m_color; // 180 degree rotation
+    m_degree=TFT_degree180;
     break;
   case 3:
-    madctl = 0xE8; // 270 degree rotation
+    madctl = TFT_degree270|m_color; // 270 degree rotation
+    m_degree=TFT_degree270;
     break;
   }
   sendcommand(HX8357_MADCTL); // MADCTL command

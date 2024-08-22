@@ -12,12 +12,19 @@
 #define TFTHEIGHT 480
 #define TFTLCD_DELAY 250
 
-#define TFT_RST 20
-#define TFT_CS 17 /// tft_lcd chip select
-#define TFT_DC 15
+#define TFT_RST 21
+#define TFT_CS 22 /// tft_lcd chip select
+#define TFT_DC 20
 #define TFT_MISO 16
 #define TFT_MOSI 19
 #define TFT_SCL 18
+
+#define TFT_RGB 0x08
+#define TFT_BGR 0x00
+#define TFT_degree0 0x40
+#define TFT_degree90 0x20
+#define TFT_degree180 0x80
+#define TFT_degree270 0xE0
 
 #define READ_BIT 0x80
 
@@ -37,6 +44,8 @@ public:
 
     spi_inst_t *m_spi;
     uint32_t m_baud;
+    uint8_t m_degree;
+    uint8_t m_color;
 
     void init(spi_inst_t *spi, uint32_t baud);
     void setRotation(uint8_t m);
@@ -48,6 +57,8 @@ public:
     void sendcommand(uint8_t IR);
     void sendDataByte(uint8_t data);
     void sendDataWord(uint16_t data);
+    void setBGR();
+    void setRGB();
     // void TFT_clear();
     void clear_screen(void); // TFT-LCD clear screen with black color
     // void TFT_color_screen(U16 color);		// TFT-LCD full screen color

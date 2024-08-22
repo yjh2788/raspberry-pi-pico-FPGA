@@ -23,15 +23,15 @@ const uint8_t vga_ov7670[][2] = {
 };
 
 const uint8_t qvga_ov7670[][2] = {
-    {REG_CLKRC,0x01},
-    {REG_COM7,COM7_FMT_VGA},
+    {REG_CLKRC,0x01},//01
+    {REG_COM7,COM7_FMT_QVGA},
     {REG_COM3,COM3_DCWEN},
 	{REG_COM14, 0x19},	// divide by 4
     {REG_SCALING_XSC,0x3A},
     {REG_SCALING_YSC,0x35},
 	{REG_SCALING_DCWCTR, 0x11},		// downsample by 4
 	{REG_SCALING_PCLK_DIV, 0xf1},		// divide by 4
-	{REG_SCALING_PCLK_DELAY, 0x02},
+	{REG_SCALING_PCLK_DELAY, 0x02}, //02
 	{REG_HSTART,0x16},
 	{REG_HSTOP,0x04},
 	{REG_HREF,0x24},

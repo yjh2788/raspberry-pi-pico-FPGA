@@ -10,8 +10,8 @@
 #include "pico/binary_info/code.h"
 
 // respberry pico gpio pin allocation
-#define SCL 8
-#define SDA 9
+#define SCL 9
+#define SDA 8
 #define VS 13
 #define HS 12
 #define PLK 11
