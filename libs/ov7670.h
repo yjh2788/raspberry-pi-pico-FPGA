@@ -40,31 +40,24 @@
 #define ov7670_I2C_ADDRESS 0x21
 // The 7 bit SCCB/I2C address is 0x21, this translates to 0x42 for write address and 0x43 for read address.
 
-enum resolution
-{
-    VGA = 0,  // 640 x 480 //RGB
-    QVGA = 1, // 320 x 240 //RGB
-    QQVGA = 2, // 160 x 120 //RGB
-    CIF = 3,  // 352 x 288  //YCbCr
-    QCIF = 4  // 176 x 144 //YCbCr
-};
+
 
 class ov7670{
 public:
-    uint m_SCL;
-    uint m_SDA;
-    uint m_VS;
-    uint m_HS;
-    uint m_PLK;
-    uint m_XLK;
-    uint m_D0;
-    uint m_D1;
-    uint m_D2;
-    uint m_D3;
-    uint m_D4;
-    uint m_D5;
-    uint m_D6;
-    uint m_D7;
+    uint32_t m_SCL;
+    uint32_t m_SDA;
+    uint32_t m_VS;
+    uint32_t m_HS;
+    uint32_t m_PLK;
+    uint32_t m_XLK;
+    uint32_t m_D0;
+    uint32_t m_D1;
+    uint32_t m_D2;
+    uint32_t m_D3;
+    uint32_t m_D4;
+    uint32_t m_D5;
+    uint32_t m_D6;
+    uint32_t m_D7;
     Mat m_img;
     i2c_inst_t *m_i2c = nullptr;
     uint8_t m_resolution=QVGA;
@@ -72,10 +65,12 @@ public:
  
     ov7670();
     ov7670(IMG_Type Itype);
-    ov7670(uint width, uint height, IMG_Type Itype);
-    void ov7670_xclk_init(uint freq,int duty);
+    ov7670(uint32_t width, uint32_t height, IMG_Type Itype);
+    void ov7670_xclk_init(uint32_t freq,int duty);
     void ov7670_pin_init();
+    void ov7670_PIO_pin_init();
     void ov7670_init(i2c_inst_t *i2c, uint32_t baudrate);
+    void ov7670_init(i2c_inst_t *i2c, uint32_t baudrate, bool PIO_enable);
     template<int width,int height>
     void getRawData(uint8_t *buf);
     template<int width,int height>

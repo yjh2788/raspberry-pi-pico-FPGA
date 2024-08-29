@@ -16,6 +16,15 @@ enum IMG_Type
 
 };
 
+enum resolution
+{
+    VGA = 0,  // 640 x 480 //RGB
+    QVGA = 1, // 320 x 240 //RGB
+    QQVGA = 2, // 160 x 120 //RGB
+    CIF = 3,  // 352 x 288  //YCbCr
+    QCIF = 4  // 176 x 144 //YCbCr
+};
+
 class Mat
 {
 public:

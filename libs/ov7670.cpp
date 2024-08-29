@@ -234,7 +234,7 @@ const uint8_t reg_vals[][2] = {
 	//gain	
 	{REG_BLUE, 0x80/*0x40*/},
 	{REG_RED, 0x80/*0x06*/},
-	{REG_GAIN,0x10}, 	{REG_AECH, 0x10},
+	{REG_GAIN,0x10}, 	{REG_AECH, 0x0},//0x10//exposure time
 	//{REG_GAIN, 0},	{REG_AECH, 0},
 	//
 	{REG_COM8, COM8_FASTAEC|COM8_AECSTEP|COM8_AGC|COM8_AEC|COM8_AWB},
@@ -313,7 +313,7 @@ ov7670::ov7670(IMG_Type Itype)
     m_resolution = QVGA;
     m_img_format = Itype;
 }
-ov7670::ov7670(uint width, uint height, IMG_Type Itype)
+ov7670::ov7670(uint32_t width, uint32_t height, IMG_Type Itype)
     : m_img(width, height, Itype)
 {
     m_SCL = SCL;
@@ -334,6 +334,36 @@ ov7670::ov7670(uint width, uint height, IMG_Type Itype)
     m_img_format = Itype;
 }
 
+void ov7670::ov7670_xclk_init(uint32_t xclk_freq,int duty)
+{
+    gpio_set_function(m_XLK, GPIO_FUNC_PWM);
+    uint32_t chan;
+    uint32_t slice_num = pwm_gpio_to_slice_num(m_XLK);
+    if (m_XLK % 2 == 0)
+        chan = PWM_CHAN_A;
+    else
+        chan = PWM_CHAN_B;
+    // Set the PWM running
+    pwm_set_freq_duty(slice_num,chan,xclk_freq,duty);
+}
+
+void ov7670::ov7670_PIO_pin_init()
+{
+    this->pin_mask = MASK(m_SDA) | MASK(m_SCL) | MASK(m_VS) | MASK(m_HS) |
+                     MASK(m_PLK) | MASK(m_XLK) | MASK(m_D0) | MASK(m_D1) |
+                     MASK(m_D2) | MASK(m_D3) | MASK(m_D4) | MASK(m_D5) | MASK(m_D6) | MASK(m_D7);
+
+    this->data_mask = MASK(m_D0) | MASK(m_D1) | MASK(m_D2) | MASK(m_D3) |
+                      MASK(m_D4) | MASK(m_D5) | MASK(m_D6) | MASK(m_D7);
+
+    gpio_init_mask(this->pin_mask);
+    gpio_set_dir(m_SCL, GPIO_OUT);
+    gpio_set_dir(m_SDA, GPIO_OUT); 
+
+    //xclk setting
+    ov7670_xclk_init(8*MHz,50);
+}
+
 void ov7670::ov7670_pin_init()
 {
     this->pin_mask = MASK(m_SDA) | MASK(m_SCL) | MASK(m_VS) | MASK(m_HS) |
@@ -343,19 +373,9 @@ void ov7670::ov7670_pin_init()
     this->data_mask = MASK(m_D0) | MASK(m_D1) | MASK(m_D2) | MASK(m_D3) |
                       MASK(m_D4) | MASK(m_D5) | MASK(m_D6) | MASK(m_D7);
 
-    debug_print("%32b\n", this->data_mask);
-    debug_print("%32b\n", MASK(m_D6));
-    debug_print("%32b\n", MASK(m_D4));
-    debug_print("%32b\n", MASK(m_D2));
-    debug_print("%32b\n", MASK(m_D0));
-    debug_print("%32b\n", MASK(m_D1));
-    debug_print("%32b\n", MASK(m_D3));
-    debug_print("%32b\n", MASK(m_D5));
-    debug_print("%32b\n", MASK(m_D7));
-    //blink(15);
     gpio_init_mask(this->pin_mask);
     gpio_set_dir(m_SCL, GPIO_OUT);
-    gpio_set_dir(m_SDA, GPIO_OUT); // INOUT
+    gpio_set_dir(m_SDA, GPIO_OUT); 
     gpio_set_dir(m_VS, GPIO_IN);
     gpio_set_dir(m_HS, GPIO_IN);
     gpio_set_dir(m_PLK, GPIO_IN);
@@ -397,18 +417,34 @@ void ov7670::ov7670_init(i2c_inst_t *i2c, uint32_t baudrate)
     debug_print(debug, "finished ov7670 initializing\n");
 }
 
-void ov7670::ov7670_xclk_init(uint xclk_freq,int duty)
-{
-    gpio_set_function(m_XLK, GPIO_FUNC_PWM);
-    uint32_t chan;
-    uint slice_num = pwm_gpio_to_slice_num(m_XLK);
-    if (m_XLK % 2 == 0)
-        chan = PWM_CHAN_A;
-    else
-        chan = PWM_CHAN_B;
-    // Set the PWM running
-    pwm_set_freq_duty(slice_num,chan,xclk_freq,duty);
+void ov7670::ov7670_init(i2c_inst_t *i2c, uint32_t baudrate, bool PIO_enable)
+{   
+    if (PIO_enable) ov7670_PIO_pin_init(); 
+    else ov7670_pin_init();
+
+    gpio_set_function(m_SDA, GPIO_FUNC_I2C);
+    gpio_set_function(m_SCL, GPIO_FUNC_I2C);
+    gpio_pull_up(m_SCL);
+    gpio_pull_up(m_SDA);
+    bi_decl(bi_2pins_with_func(m_SDA, m_SCL, GPIO_FUNC_I2C));
+    
+    m_i2c = i2c;
+    i2c_init(i2c, baudrate);
+    sleep_ms(100);
+    int num = sizeof(reg_vals)/sizeof(reg_vals[0]);
+    sendCommand(0x12,0x80);
+    sleep_ms(1);
+    debug_print(debug, "reg_vals = %d\n", num);
+    for (size_t i = 0; i < num ; i++)
+    {
+        sendCommand(reg_vals[i][0],reg_vals[i][1]);
+        debug_print(debug, "sending(%d)\n", i);
+        debug_print(debug, "adress=%x,data=%x\n", reg_vals[i][0], reg_vals[i][1]);
+    }
+    debug_print(debug, "finished ov7670 initializing\n");
 }
+
+
 
 uint8_t ov7670::get_word_data()
 {
@@ -446,7 +482,7 @@ uint8_t ov7670::get_word_data3()
     int count = 0;
     //printf("d_mask=%08x\n",d_mask);
     debug_print(debug, "starting get word data\n");
-    for (uint i = 0; i < 32; i++)
+    for (uint32_t i = 0; i < 32; i++)
     {
         // printf("data=%08x\n",data);
         // printf("data&1ul =%8x\n",data & 1ul);

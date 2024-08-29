@@ -401,17 +401,23 @@ void TFT_LCD::imshow(uint8_t* arr, uint8_t res)
 
 void TFT_LCD::imshow(uint8_t* arr, int width, int height)
 {
-  int t_width=width*2;
+  int total=width*2*height;
   //setAddrWindow(0, 0, width, height);
   sendcommand(HX8357_RAMWR);
   cs_select();
   DC_DATA();
-  for (int j = 0; j < height; j++)
+  // for (int j = 0; j < height; j++)
+  // {
+  //   for (int i = 0; i <t_width; i++)
+  //   {
+  //     spi_transfer_byte(arr[i+j*t_width]);
+  //   }
+  // }
+  for (int j = 0; j <total; j++)
   {
-    for (int i = 0; i <t_width; i++)
-    {
-      spi_transfer_byte(arr[i+j*t_width]);
-    }
+    
+    spi_transfer_byte(arr[j]);
+    
   }
   cs_deselect();
 }

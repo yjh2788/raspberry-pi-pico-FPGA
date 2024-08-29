@@ -16,7 +16,8 @@ pico_sdk_init()
  
 add_executable(${projname}
         #camera_project_multicore.cpp
-        camera_project.cpp
+        #camera_project.cpp
+        camera_project_PIO.cpp
         #"${project_PATH}/libs/read_ov7670.pio"
         "${project_PATH}/libs/PIO_setting.cpp"
         "${project_PATH}/libs/ov7670.cpp"
