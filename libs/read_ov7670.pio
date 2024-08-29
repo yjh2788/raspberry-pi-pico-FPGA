@@ -1,0 +1,40 @@
+.program read_ov7670_data
+.wrap_target
+.define public VS 13
+.define public HS 12   
+.define public PLK 11
+
+    pull noblock           ; get data to osr
+    mov x, osr             ;get width
+    pull noblock           ; get data to osr
+    mov y, osr             ;get height
+
+loop:
+   
+wait_vs_high:
+    wait 1 gpio VS              ; wait until VS is HIGH
+   
+wait_vs_low:
+    wait 0 gpio VS              ; wait until VS is LOW
+    
+wait_hs_high:
+    wait 1 gpio HS              ; wait until HS is HIGH
+
+;horizental_data
+wait_plk_low:
+    wait 0 gpio PLK              ; wait until PLK is LOW
+
+read_data:                      ; data read - D0 ~ D7 (pin 0 ~ 7)
+    in pins, 8                  ; D0 ~ D7(8bit)
+
+wait_plk_high:
+    wait 1 gpio PLK              ; wait until PLK is HIGH
+    jmp x--, wait_plk_low
+   
+wait_hs_low:
+    wait 0 gpio HS              ; wait until HS is LOW
+    jmp y--, wait_hs_high
+
+jmp loop
+
+.wrap
