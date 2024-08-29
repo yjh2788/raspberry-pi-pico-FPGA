@@ -68,17 +68,20 @@ void sendcommand(uint8_t IR)
   spi_transfer_byte(IR);
   cs_deselect();
 }
+
 int main()
 {
-    
     debug=false;
 
     const int w = QVGA_width;
     const int h = QVGA_height;
     int buf_size=w * h * 2;
     uint8_t buf[buf_size]={0,};
-    PIO pio = pio0; // 사용할 PIO 모듈 선택
-    uint32_t sm = 0; // 사용할 상태 머신 선택
+    uint8_t *buf_p=buf;
+    uint32_t t_width=2*w;
+    
+    uint32_t sm = 0; // state machine
+    PIO pio = pio0; // PIO 
     TFT_LCD tft;
     ov7670 cam(RAW_DATA);
 
@@ -91,36 +94,13 @@ int main()
     //tft.setBGR();//qvag
     tft.setRGB();//qqvga
 
-    cam.ov7670_init(I2C,I2C_baud);
+    cam.ov7670_init(I2C,I2C_baud, 1);
     cam.setResolution(resolution::QVGA);
     //cam.setImageType(IMG_Type::YUV);
     cam.setImageType(IMG_Type::RGB565);
-    uint8_t *buf_p=buf;
-    uint32_t t_width=2*w;
+    
     while(1)
     {
-        // //cam.getRawData<w, h>(buf);   
-        // while (!(gpio_get(VS)));//wait for 1
-        // while ((gpio_get(VS)));//wait for 0
-        // while (!(gpio_get(VS)));//wait for 1
-        // while ((gpio_get(VS)));//wait for 0
-
-        // for(int i = 0; i < h; i++)
-        // {
-        //     // wait until horizontal data start
-        //     while (!(gpio_get(HS)));//wait for 1
-        //     for(int j = 0; j < t_width; j++)
-        //     {
-        //         while((gpio_get(PLK)));
-        //         *buf_p++ = uint8_t(gpio_get_all() & 0xff);
-        //         while(!(gpio_get(PLK)));
-        //     }
-        //     while ((gpio_get(HS)));
-        // }   
-
-        
-        
-        //setAddrWindow(0, 0, width, height);
         sendcommand(HX8357_RAMWR);
         cs_select();
         DC_DATA();
@@ -130,14 +110,14 @@ int main()
             if (pio_sm_is_rx_fifo_empty(pio, sm)) {
                 while(!pio_sm_is_rx_fifo_empty(pio, sm));
             }
-
-            spi_transfer_byte(pio_sm_get(pio, sm));
+            buf_p[j++]=pio_sm_get(pio,sm);
+            //spi_transfer_byte(pio_sm_get(pio, sm));
             
         }
         cs_deselect();
 
 
-        //tft.imshow(buf,w,h);
+        tft.imshow(buf,w,h);
     
         //print_data(buf_size,buf);
     }
