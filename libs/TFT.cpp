@@ -6,83 +6,6 @@
 #include "TFT_font.h"
 #include "pico/binary_info/code.h"
 
-static const uint8_t HX8357D_regValues[] = {
-    SWRESET,
-    0,
-    SETC,
-    3,
-    0xFF,
-    0x83,
-    0x57,
-    TFTLCD_DELAY,
-    250,
-    SETRGB,
-    4,
-    0x80,
-    0x00,
-    0x06,
-    0x06,
-    SETCOM,
-    1,
-    0x25, // -1.52V
-    SETOSC,
-    1,
-    0x68, // Normal mode 70Hz, Idle mode 55 Hz
-    SETPANEL,
-    1,
-    0x05, // BGR, Gate direction swapped
-    SETPWR1,
-    6,
-    0x00,
-    0x15,
-    0x1C,
-    0x1C,
-    0x83,
-    0xAA,
-    SETSTBA,
-    6,
-    0x50,
-    0x50,
-    0x01,
-    0x3C,
-    0x1E,
-    0x08,
-    // MEME GAMMA HERE
-    SETCYC,
-    7,
-    0x02,
-    0x40,
-    0x00,
-    0x2A,
-    0x2A,
-    0x0D,
-    0x78,
-    COLMOD,
-    1,
-    0x55,
-    MADCTL,
-    1,
-    0x00, // 4c // 0b11100000, // ���⸦ �ٲ�� ��  1110, 0011, xx1x�� �ٲٱ�
-    TEON,
-    1,
-    0x00,
-    TEARLINE,
-    2,
-    0x00,
-    0x02,
-    SLPOUT,
-    0,
-    TFTLCD_DELAY,
-    150,
-    DISPOFF,
-    0,
-    TFTLCD_DELAY,
-    50,
-    DISPON,
-    0,
-    TFTLCD_DELAY,
-    50,
-};
 
 unsigned char ScreenMode = 'P';         // screen mode(P=portrait, L=landscape)
 unsigned char LineLimit = 40;           // character length of line (30 or 40)
@@ -96,15 +19,15 @@ unsigned int cursor = 0;                // cursor color
 unsigned char outline_flag = 0;         // 0 = outline off, 1 = outline on
 unsigned int outline = 0;               // outline color
 
-//***********************************************************************************
-// TFT_SPI
 TFT_LCD::TFT_LCD()
 {
 }
 TFT_LCD::~TFT_LCD()
 {
 }
-
+#ifdef TFT_SPI
+//***********************************************************************************
+// TFT_SPI
 inline void TFT_LCD::cs_select()
 {
   asm volatile("nop \n nop \n nop");
@@ -195,8 +118,8 @@ void TFT_LCD::init(spi_inst_t *spi, uint32_t baud) /* initialize TFT-LCD with HX
 {
   m_spi = spi;
   m_baud = baud;
-  m_degree=TFT_degree90;
-  m_color=TFT_RGB;
+  m_degree = TFT_degree90;
+  m_color = TFT_RGB;
 
   spi_init(m_spi, m_baud);
 
@@ -225,102 +148,8 @@ void TFT_LCD::init(spi_inst_t *spi, uint32_t baud) /* initialize TFT-LCD with HX
   gpio_put(TFT_RST, 1);
   // Make the CS pin available to picotool
   bi_decl(bi_1pin_with_name(TFT_CS, "SPI CS"));
-
-  sendByte(HX8357_SWRESET, 0x01); // window setting
-  sleep_ms(10);
-
-  sendWord(HX8357D_SETC, 0xFF83);
-  sendDataByte(0x57);
-  sendDataByte(0xFF);
-  sleep_ms(300);
-
-  sendWord(HX8357_SETRGB, 0x8000);
-  sendDataWord(0x0606);
-  sendByte(HX8357D_SETCOM, 0x25);
-  sendByte(HX8357_SETOSC, 0x68); // 0x68
-  sendByte(HX8357_SETPANEL, 0x05);
-  sendWord(HX8357_SETPWR1, 0x0015);
-  sendDataWord(0x1C1C);
-  sendDataWord(0x83AA);
-  sendWord(HX8357D_SETSTBA, 0x5050);
-  sendDataWord(0x013C);
-  sendDataWord(0x1E08);
-  sendWord(HX8357D_SETCYC, 0x0240);
-  sendDataWord(0x002A);
-  sendDataWord(0x2A0D);
-  sendDataWord(0x78);            // sendDataByte(0x78)
-  sendcommand(HX8357D_SETGAMMA); // setting gamma
-  sendDataWord(0x020A);
-  sendDataWord(0x111d);
-  sendDataWord(0x2335);
-  sendDataWord(0x414b);
-  sendDataWord(0x4b42);
-  sendDataWord(0x3A27);
-  sendDataWord(0x1b08);
-  sendDataWord(0x0903);
-  sendDataWord(0x020A);
-  sendDataWord(0x111d);
-  sendDataWord(0x2335);
-  sendDataWord(0x414b);
-  sendDataWord(0x4b42);
-  sendDataWord(0x3A27);
-  sendDataWord(0x1b08);
-  sendDataWord(0x0903);
-  sendDataWord(0x0001);
-
-  sendByte(HX8357_COLMOD, 0x55);
-  sendByte(HX8357_MADCTL, 0x20);
-  sendByte(HX8357_TEON, 0x00);
-  sendByte(HX8357_TEARLINE, 0x0002);
-  sendByte(HX8357_SLPOUT, 0x11);
-  sendByte(HX8357_DISPON, 0x29);
+  reg_init();
 }
-//*****************************************************************************
-/* ---------------------------------------------------------------------------- */
-/*	 출력제어 함수					*/
-/* ---------------------------------------------------------------------------- */
-void TFT_LCD::setBGR()
-{
-  uint8_t madctl=m_degree|TFT_BGR;
-  sendcommand(HX8357_MADCTL);
-  sendDataByte(madctl);  
-  m_color=TFT_BGR;
-}
-void TFT_LCD::setRGB()
-{
-  uint8_t madctl=m_degree|TFT_RGB;
-  sendcommand(HX8357_MADCTL);
-  sendDataByte(madctl);  
-  m_color=TFT_RGB;
-
-}
-void TFT_LCD::setRotation(uint8_t m)
-{
-  uint8_t madctl = 0;
-
-  switch (m)
-  {
-  case 0:
-    madctl = TFT_degree0|m_color; // 0 degree rotation (default)
-    m_degree=TFT_degree0;
-    break;
-  case 1:
-    madctl = TFT_degree90|m_color; // 90 degree rotation
-    m_degree=TFT_degree90;
-    break;
-  case 2:
-    madctl = TFT_degree180|m_color; // 180 degree rotation
-    m_degree=TFT_degree180;
-    break;
-  case 3:
-    madctl = TFT_degree270|m_color; // 270 degree rotation
-    m_degree=TFT_degree270;
-    break;
-  }
-  sendcommand(HX8357_MADCTL); // MADCTL command
-  sendDataByte(madctl);       // Set the rotation
-}
-
 void TFT_LCD::imshow(Array<uint8_t> arr, uint8_t res)
 {
   int width = 0;
@@ -406,13 +235,6 @@ void TFT_LCD::imshow(uint8_t* arr, int width, int height)
   sendcommand(HX8357_RAMWR);
   cs_select();
   DC_DATA();
-  // for (int j = 0; j < height; j++)
-  // {
-  //   for (int i = 0; i <t_width; i++)
-  //   {
-  //     spi_transfer_byte(arr[i+j*t_width]);
-  //   }
-  // }
   for (int j = 0; j <total; j++)
   {
     
@@ -420,6 +242,409 @@ void TFT_LCD::imshow(uint8_t* arr, int width, int height)
     
   }
   cs_deselect();
+}
+
+void TFT_LCD::imshow(uint8_t* arr, int x, int y, int width, int height)
+{
+  int total=width*2*height;
+  setAddrWindow(x, y, width, height);
+  sendcommand(HX8357_RAMWR);
+  cs_select();
+  DC_DATA();
+  for (int j = 0; j <total; j++)
+  {
+    
+    spi_transfer_byte(arr[j]);
+    
+  }
+  cs_deselect();
+}
+
+
+void TFT_LCD::color_screen(U16 color) /* TFT-LCD full screen color */
+{
+  GRAM_address(479, 319);
+  cs_select();
+  DC_DATA();
+  for (int j = 0; j < TFTHEIGHT; j++)
+  {
+    for (int i = 0; i < TFTWIDTH; i++)
+    {
+      spi_transfer_byte(color >> 8);
+      spi_transfer_byte(color & 0xff);
+    }
+  }
+  cs_deselect();
+}
+
+#elif defined(TFT_8BIT)
+//***********************************************************************************
+// TFT_8BIT
+
+inline void TFT_LCD::cs_select()
+{
+  asm volatile("nop \n nop \n nop");
+  gpio_put(TFT_CS, 0); // Active low
+  asm volatile("nop \n nop \n nop");
+}
+
+inline void TFT_LCD::cs_deselect()
+{
+  asm volatile("nop \n nop \n nop");
+  gpio_put(TFT_CS, 1);
+  asm volatile("nop \n nop \n nop");
+}
+
+inline void TFT_LCD::DC_DATA()
+{
+  asm volatile("nop \n nop \n nop");
+  gpio_put(TFT_DC, 1); // data->high
+  asm volatile("nop \n nop \n nop");
+  //sleep_us(100);
+}
+
+inline void TFT_LCD::DC_COMMAND()
+{
+  asm volatile("nop \n nop \n nop");
+  gpio_put(TFT_DC, 0); // command -> low
+  asm volatile("nop \n nop \n nop");
+  //sleep_us(100);
+}
+
+inline void TFT_LCD::WR_LOW()
+{
+  asm volatile("nop \n nop \n nop");
+  gpio_put(TFT_WR, 0); // command -> low
+  asm volatile("nop \n nop \n nop");
+  //sleep_us(100);
+}
+
+inline void TFT_LCD::WR_HIGH()
+{
+  asm volatile("nop \n nop \n nop");
+  gpio_put(TFT_WR, 1); // command -> low
+  asm volatile("nop \n nop \n nop");
+  //sleep_us(100);
+}
+
+inline void TFT_LCD::write8(uint8_t data)
+{
+  gpio_put_masked(0xff, data);
+  WR_LOW();
+  WR_HIGH();
+}
+inline void TFT_LCD::write16(uint16_t data)
+{
+  uint8_t h = data >> 8;
+  uint8_t l = data & 0xff;
+  write8(h);
+  write8(l);
+}
+
+void TFT_LCD::sendWord(uint8_t IR, uint16_t data)
+{
+  cs_select();
+  DC_COMMAND();
+  write8(IR);
+  DC_DATA();
+  write16(data);
+  cs_deselect();
+}
+void TFT_LCD::sendByte(uint8_t IR, uint8_t data)
+{
+  cs_select();
+  DC_COMMAND();
+  write8(IR);
+  DC_DATA();
+  write8(data);
+  cs_deselect();
+}
+
+void TFT_LCD::sendcommand(uint8_t IR)
+{
+  cs_select();
+  DC_COMMAND();
+  write8(IR);
+  cs_deselect();
+}
+void TFT_LCD::sendDataByte(uint8_t data)
+{
+  cs_select();
+  DC_DATA();
+  write8(data);
+  cs_deselect();
+}
+void TFT_LCD::sendDataWord(uint16_t data)
+{
+  cs_select();
+  DC_DATA();
+  write16(data);
+  cs_deselect();
+}
+//*****************------TFT initial-------------------------------
+void TFT_LCD::init() /* initialize TFT-LCD with HX8347 */
+{
+  gpio_init_mask(0xff);
+  gpio_set_dir(D0, GPIO_OUT);
+  gpio_set_dir(D1, GPIO_OUT);
+  gpio_set_dir(D2, GPIO_OUT);
+  gpio_set_dir(D3, GPIO_OUT);
+  gpio_set_dir(D4, GPIO_OUT);
+  gpio_set_dir(D5, GPIO_OUT);
+  gpio_set_dir(D6, GPIO_OUT);
+  gpio_set_dir(D7, GPIO_OUT);
+  m_degree=TFT_degree90;
+  m_color=TFT_RGB;
+
+  // Chip select is active-low, so we'll initialise it to a driven-high state
+  gpio_init(TFT_CS);
+  gpio_set_dir(TFT_CS, GPIO_OUT);
+  gpio_put(TFT_CS, 1);
+
+  gpio_init(TFT_DC);
+  gpio_set_dir(TFT_DC, GPIO_OUT);
+  gpio_put(TFT_DC, 0);
+
+  gpio_init(TFT_WR);
+  gpio_set_dir(TFT_WR, GPIO_OUT);
+  gpio_put(TFT_WR, 0);
+
+  gpio_init(TFT_RST);
+  gpio_set_dir(TFT_RST, GPIO_OUT);
+  gpio_put(TFT_RST, 1);
+
+  // TFT_LCD reset
+  gpio_put(TFT_RST, 0);
+  sleep_ms(100);
+  gpio_put(TFT_RST, 1);
+  reg_init();
+}
+
+void TFT_LCD::imshow(Array<uint8_t> arr, uint8_t res)
+{
+  int width = 0;
+  int height = 0;
+  switch (res)
+  {
+  case resolution::QVGA:
+    width=QVGA_width;
+    height=QVGA_height;
+    break;
+  case resolution::QQVGA:
+    width=QQVGA_width;
+    height=QQVGA_height;
+    break;
+  case resolution::CIF:
+    width=CIF_width;
+    height=CIF_height;
+    break;
+  case resolution::QCIF:
+    width=QCIF_width;
+    height=QCIF_height;
+    break;
+
+  }
+  uint8_t *buf = arr.getbuf();
+  int t_width=width*2;
+  setAddrWindow(0, 0, width, height);
+  cs_select();
+  DC_DATA();
+  for (int j = 0; j < height; j++)
+  {
+    for (int i = 0; i <t_width; i++)
+    {
+      write8(buf[i+j*t_width]);
+    }
+  }
+  cs_deselect();
+}
+
+void TFT_LCD::imshow(uint8_t* arr, uint8_t res)
+{
+  int width = 0;
+  int height = 0;
+  switch (res)
+  {
+  case resolution::QVGA:
+    width=QVGA_width;
+    height=QVGA_height;
+    break;
+  case resolution::QQVGA:
+    width=QQVGA_width;
+    height=QQVGA_height;
+    break;
+  case resolution::CIF:
+    width=CIF_width;
+    height=CIF_height;
+    break;
+  case resolution::QCIF:
+    width=QCIF_width;
+    height=QCIF_height;
+    break;
+
+  }
+  
+  int t_width=width*2;
+  setAddrWindow(0, 0, width, height);
+  cs_select();
+  DC_DATA();
+  for (int j = 0; j < height; j++)
+  {
+    for (int i = 0; i <t_width; i++)
+    {
+      write8(arr[i+j*t_width]);
+    }
+  }
+  cs_deselect();
+}
+
+void TFT_LCD::imshow(uint8_t* arr, int width, int height)
+{
+  int total=width*2*height;
+  //setAddrWindow(0, 0, width, height);
+  sendcommand(HX8357_RAMWR);
+  cs_select();
+  DC_DATA();
+  for (int j = 0; j <total; j++)
+  {
+    
+    write8(arr[j]);
+    
+  }
+  cs_deselect();
+}
+
+void TFT_LCD::imshow(uint8_t* arr, int x, int y, int width, int height)
+{
+  int total=width*2*height;
+  setAddrWindow(x, y, width, height);
+  sendcommand(HX8357_RAMWR);
+  cs_select();
+  DC_DATA();
+  for (int j = 0; j <total; j++)
+  {
+    
+    write8(arr[j]);
+    
+  }
+  cs_deselect();
+}
+
+
+void TFT_LCD::color_screen(U16 color) /* TFT-LCD full screen color */
+{
+  GRAM_address(479, 319);
+  cs_select();
+  DC_DATA();
+  for (int j = 0; j < TFTHEIGHT; j++)
+  {
+    for (int i = 0; i < TFTWIDTH; i++)
+    {
+      write8(color >> 8);
+      write8(color & 0xff);
+    }
+  }
+  cs_deselect();
+}
+
+#endif
+
+void TFT_LCD::reg_init()
+{
+  sendByte(HX8357_SWRESET, 0x01); // window setting
+  sleep_ms(10);
+
+  sendWord(HX8357D_SETC, 0xFF83);
+  sendDataByte(0x57);
+  sendDataByte(0xFF);
+  sleep_ms(300);
+
+  sendWord(HX8357_SETRGB, 0x8000);
+  sendDataWord(0x0606);
+  sendByte(HX8357D_SETCOM, 0x25);
+  sendByte(HX8357_SETOSC, 0x68); // 0x68
+  sendByte(HX8357_SETPANEL, 0x05);
+  sendWord(HX8357_SETPWR1, 0x0015);
+  sendDataWord(0x1C1C);
+  sendDataWord(0x83AA);
+  sendWord(HX8357D_SETSTBA, 0x5050);
+  sendDataWord(0x013C);
+  sendDataWord(0x1E08);
+  sendWord(HX8357D_SETCYC, 0x0240);
+  sendDataWord(0x002A);
+  sendDataWord(0x2A0D);
+  sendDataWord(0x78);            // sendDataByte(0x78)
+  sendcommand(HX8357D_SETGAMMA); // setting gamma
+  sendDataWord(0x020A);
+  sendDataWord(0x111d);
+  sendDataWord(0x2335);
+  sendDataWord(0x414b);
+  sendDataWord(0x4b42);
+  sendDataWord(0x3A27);
+  sendDataWord(0x1b08);
+  sendDataWord(0x0903);
+  sendDataWord(0x020A);
+  sendDataWord(0x111d);
+  sendDataWord(0x2335);
+  sendDataWord(0x414b);
+  sendDataWord(0x4b42);
+  sendDataWord(0x3A27);
+  sendDataWord(0x1b08);
+  sendDataWord(0x0903);
+  sendDataWord(0x0001);
+
+  sendByte(HX8357_COLMOD, 0x55);
+  sendByte(HX8357_MADCTL, 0x20);
+  sendByte(HX8357_TEON, 0x00);
+  sendByte(HX8357_TEARLINE, 0x0002);
+  sendByte(HX8357_SLPOUT, 0x11);
+  sendByte(HX8357_DISPON, 0x29);
+}
+
+//*****************************************************************************
+/* ---------------------------------------------------------------------------- */
+/*	 출력제어 함수					*/
+/* ---------------------------------------------------------------------------- */
+void TFT_LCD::setBGR()
+{
+  uint8_t madctl=m_degree|TFT_BGR;
+  sendcommand(HX8357_MADCTL);
+  sendDataByte(madctl);  
+  m_color=TFT_BGR;
+}
+void TFT_LCD::setRGB()
+{
+  uint8_t madctl=m_degree|TFT_RGB;
+  sendcommand(HX8357_MADCTL);
+  sendDataByte(madctl);  
+  m_color=TFT_RGB;
+
+}
+void TFT_LCD::setRotation(uint8_t m)
+{
+  uint8_t madctl = 0;
+
+  switch (m)
+  {
+  case 0:
+    madctl = TFT_degree0|m_color; // 0 degree rotation (default)
+    m_degree=TFT_degree0;
+    break;
+  case 1:
+    madctl = TFT_degree90|m_color; // 90 degree rotation
+    m_degree=TFT_degree90;
+    break;
+  case 2:
+    madctl = TFT_degree180|m_color; // 180 degree rotation
+    m_degree=TFT_degree180;
+    break;
+  case 3:
+    madctl = TFT_degree270|m_color; // 270 degree rotation
+    m_degree=TFT_degree270;
+    break;
+  }
+  sendcommand(HX8357_MADCTL); // MADCTL command
+  sendDataByte(madctl);       // Set the rotation
 }
 
 void TFT_LCD::setAddrWindow(uint16_t x1, uint16_t y1, uint16_t w, uint16_t h)
@@ -447,42 +672,6 @@ void TFT_LCD::clear_screen(void) /* TFT-LCD clear screen with black color */
   TFT_LCD::color_screen(Black);
 }
 
-void TFT_LCD::color_screen(U16 color) /* TFT-LCD full screen color */
-{
-  // setAddrWindow(30, 30, 150, 150);
-  // setAddrWindow(0, 0, TFTWIDTH - 1, TFTHEIGHT - 1);
-  //  DC_COMMAND();
-  // GRAM_address(319,479);
-  GRAM_address(479, 319);
-  // GRAM_address(239,319);
-  cs_select();
-  DC_DATA();
-  for (int j = 0; j < TFTHEIGHT; j++)
-  {
-    for (int i = 0; i < TFTWIDTH; i++)
-    {
-      spi_transfer_byte(color >> 8);
-      spi_transfer_byte(color & 0xff);
-    }
-  }
-  cs_deselect();
-
-  // cs_select();
-  // DC_COMMAND();
-  // sleep_us(100);
-  // spi_transfer_byte(HX8357_RAMWR);
-  // DC_DATA();
-  // sleep_us(100);
-  // for (int j = 0; j < TFTHEIGHT; j++)
-  // {
-  //   for (int i = 0; i < TFTWIDTH; i++)
-  //   {
-  //     spi_transfer_word(uint16_t(color));
-  //   }
-  // }
-  // cs_deselect();
-}
-
 void TFT_LCD::screen_mode(uint8_t mode)
 {
 }
@@ -501,6 +690,10 @@ void TFT_LCD::TFT_pixel(U16 xPos, U16 yPos, U16 color) /* write a pixel */
     sendDataWord(color);
   cs_deselect();
 }
+
+
+
+
 void TFT_LCD::xy(U08 xChar, U08 yChar) /* set character position (x,y) */
 {
   xcharacter = xChar;
@@ -1040,36 +1233,72 @@ void TFT_LCD::signed_float(float number, U08 integral, U08 fractional) /* displa
 void TFT_LCD::Line(S16 x1, S16 y1, S16 x2, S16 y2, U16 color) /* draw a straight line */
 {
   int x, y;
+  int x_diff = x2 - x1;
+  int y_diff = y2 - y1;
 
   if (y1 != y2) // if y1 != y2, y is variable
   {
-    if (y1 < y2) //              x is function
+    if (x1==x2)
+    {
+      sendcommand(HX8357_CASET); // Column address set
+      sendDataWord(x1);
+      sendDataWord(x2);
+      sendcommand(HX8357_PASET); // Row address set
+      sendDataWord(y1);
+      sendDataWord(y2);
+      sendcommand(HX8357_RAMWR); // Write to RAM
+      for (int i = 0; i < y_diff; i++)
+        sendDataWord(color);
+      cs_deselect();
+    }
+    else
+    {
+      if (y1 < y2) //              x is function
       for (y = y1; y <= y2; y++)
       {
-        x = x1 + (long)(y - y1) * (long)(x2 - x1) / (y2 - y1);
+        x = x1 + (long)(y - y1) * (long)(x_diff) / y_diff;
         TFT_pixel(x, y, color);
       }
     else
       for (y = y1; y >= y2; y--)
       {
-        x = x1 + (long)(y - y1) * (long)(x2 - x1) / (y2 - y1);
+        x = x1 + (long)(y - y1) * (long)(x_diff) / y_diff;
         TFT_pixel(x, y, color);
       }
+    }
+    
   }
   else if (x1 != x2) // if x1 != x2, x is variable
   {
-    if (x1 < x2) //              y is function
+    if (y1==y2)
+    {
+      sendcommand(HX8357_CASET); // Column address set
+      sendDataWord(x1);
+      sendDataWord(x2);
+      sendcommand(HX8357_PASET); // Row address set
+      sendDataWord(y1);
+      sendDataWord(y2);
+      sendcommand(HX8357_RAMWR); // Write to RAM
+      for (int i = 0; i < x_diff; i++)
+        sendDataWord(color);
+      cs_deselect();
+    }
+    else
+    {
+      if (x1 < x2) //              y is function
       for (x = x1; x <= x2; x++)
       {
-        y = y1 + (long)(x - x1) * (long)(y2 - y1) / (x2 - x1);
+        y = y1 + (long)(x - x1) * (long)(y_diff) / x_diff;
         TFT_pixel(x, y, color);
       }
     else
       for (x = x1; x >= x2; x--)
       {
-        y = y1 + (long)(x - x1) * (long)(y2 - y1) / (x2 - x1);
+        y = y1 + (long)(x - x1) * (long)(y_diff) / x_diff;
         TFT_pixel(x, y, color);
       }
+    }
+    
   }
   else // if x1 == x2 and y1 == y2, it is a dot
     TFT_pixel(x1, y1, color);

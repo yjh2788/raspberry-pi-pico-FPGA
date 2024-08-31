@@ -12,12 +12,34 @@
 #define TFTHEIGHT 480
 #define TFTLCD_DELAY 250
 
+#define TFT_8BIT
+//#define TFT_SPI 
+
+#ifdef TFT_8BIT
+
+#define TFT_RST 21
+#define TFT_CS 22 /// tft_lcd chip select
+#define TFT_DC 20
+#define TFT_WR 16
+#define TFT_RD 19
+#define D0  0
+#define D1  1
+#define D2  2
+#define D3  3
+#define D4  4
+#define D5  5
+#define D6  6
+#define D7  7
+
+
+#elif defined(TFT_SPI)
 #define TFT_RST 21
 #define TFT_CS 22 /// tft_lcd chip select
 #define TFT_DC 20
 #define TFT_MISO 16
 #define TFT_MOSI 19
 #define TFT_SCL 18
+#endif
 
 #define TFT_RGB 0x08
 #define TFT_BGR 0x00
@@ -35,23 +57,38 @@ private:
     inline void cs_deselect();
     inline void DC_DATA();
     inline void DC_COMMAND();
-    inline void spi_transfer_byte(uint8_t byte);
-    inline void spi_transfer_word(uint16_t word);
-
 public:
     TFT_LCD();
     ~TFT_LCD();
 
+#ifdef TFT_8BIT
+private:
+    inline void WR_LOW();
+    inline void WR_HIGH();
+    inline void write8(uint8_t data);
+    inline void write16(uint16_t data);
+public: 
+    void init();
+
+#elif defined(TFT_SPI)
+private:
+    inline void spi_transfer_byte(uint8_t byte);
+    inline void spi_transfer_word(uint16_t word);
+public:
     spi_inst_t *m_spi;
     uint32_t m_baud;
+    void init(spi_inst_t *spi, uint32_t baud);    
+#endif  
+  
     uint8_t m_degree;
     uint8_t m_color;
 
-    void init(spi_inst_t *spi, uint32_t baud);
+    void reg_init();
     void setRotation(uint8_t m);
     void imshow(Array<uint8_t> arr, uint8_t res);
     void imshow(uint8_t* arr , uint8_t res);
     void imshow(uint8_t* arr, int width, int height);
+    void imshow(uint8_t* arr, int x, int y, int width, int height);
     void sendWord(uint8_t IR, uint16_t data);
     void sendByte(uint8_t IR, uint8_t data);
     void sendcommand(uint8_t IR);
