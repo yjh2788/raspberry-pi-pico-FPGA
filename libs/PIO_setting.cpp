@@ -1,10 +1,38 @@
 #include "hardware/pio.h"
+#include "hardware/dma.h"
 #include "myfunc.h"
 #include "read_ov7670.pio.h"
 #include "PIO_setting.h"
 
 // PIO program binary
 extern const uint16_t read_ov7670_data_program_instructions[];
+
+
+void setup_pio_and_dma(PIO pio, uint32_t sm, float clkdiv, uint32_t width, uint32_t height, uint32_t dma_channel,uint8_t *buf, uint32_t buf_size) {
+    setup_pio(pio,  sm,  clkdiv,  width,  height);
+    // DMA 설정
+    dma_channel_config dma_cfg = dma_channel_get_default_config(dma_channel);
+    channel_config_set_read_increment(&dma_cfg, true);
+    channel_config_set_write_increment(&dma_cfg, true);
+    channel_config_set_dreq(&dma_cfg, pio_get_dreq(pio, sm, true));
+    channel_config_set_transfer_data_size(&dma_cfg, DMA_SIZE_8); // 8-bit transmition
+
+    dma_channel_configure(
+        dma_channel,    // DMA channel number
+        &dma_cfg,       // DMA channel config
+        buf,            // memory buffer (dst)
+        &pio->rxf[sm],  // PIO FIFO (src)
+        buf_size,       // transmition size
+        false           // auto start flag
+    );
+    
+}
+
+bool dma_done(uint32_t dma_channel) {
+    bool done = dma_hw->ints0 & (1u << dma_channel);
+    dma_hw->ints0 = (1u << dma_channel); //request to clear done bit
+    return done;
+}
 
 // PIO setting
 void setup_pio(PIO pio, uint32_t sm, float clkdiv, uint32_t width, uint32_t height) {

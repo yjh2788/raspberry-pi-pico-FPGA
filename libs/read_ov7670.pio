@@ -4,9 +4,9 @@
 .define public HS 12   
 .define public PLK 11
 
-    pull noblock           ; get data to osr
+    pull            ; get data to osr
     mov x, osr             ;get width
-    pull noblock           ; get data to osr
+    pull            ; get data to osr
     mov y, osr             ;get height
 
 loop:
@@ -26,7 +26,7 @@ wait_plk_low:
 
 read_data:                      ; data read - D0 ~ D7 (pin 0 ~ 7)
     in pins, 8                  ; D0 ~ D7(8bit)
-
+    push
 wait_plk_high:
     wait 1 gpio PLK              ; wait until PLK is HIGH
     jmp x--, wait_plk_low

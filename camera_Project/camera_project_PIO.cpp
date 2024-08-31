@@ -9,6 +9,7 @@
 #include "pico/stdlib.h" 
 #include "pico/stdio_usb.h"
 #include "hardware/spi.h"
+#include "hardware/dma.h"
 #include "PIO_setting.h"
 #include "read_ov7670.pio.h"
 
@@ -79,6 +80,7 @@ int main()
     uint8_t buf[buf_size]={0,};
     uint8_t *buf_p=buf;
     uint32_t t_width=2*w;
+    uint32_t dma_channel=dma_claim_unused_channel(true);
     
     uint32_t sm = 0; // state machine
     PIO pio = pio0; // PIO 
@@ -87,7 +89,8 @@ int main()
 
     stdio_init_all();
     setup_pio(pio, sm, 1.0f , w, h);
-
+    //setup_pio_and_dma(pio, sm, 1.0f , w, h, dma_channel,buf,buf_size);
+    
     tft.init(SPI,SPI_baud);
     tft.color_screen(Green);
     tft.setAddrWindow(0,0,w,h);
@@ -98,26 +101,38 @@ int main()
     cam.setResolution(resolution::QVGA);
     //cam.setImageType(IMG_Type::YUV);
     cam.setImageType(IMG_Type::RGB565);
-    
+    //dma_channel_start(dma_channel);
     while(1)
     {
-        sendcommand(HX8357_RAMWR);
-        cs_select();
-        DC_DATA();
       
-        for (int j = 0; j <buf_size; j++)
+        // DMA 전송 완료 대기
+        //while (!dma_done(dma_channel));
+        //dma_channel_wait_for_finish_blocking(dma_channel);
+
+        // sendcommand(HX8357_RAMWR);
+        // cs_select();
+        // DC_DATA();
+      
+        for (int j = 0; j <buf_size; j+=4)
         {
             if (pio_sm_is_rx_fifo_empty(pio, sm)) {
                 while(!pio_sm_is_rx_fifo_empty(pio, sm));
             }
-            buf_p[j++]=pio_sm_get(pio,sm);
-            //spi_transfer_byte(pio_sm_get(pio, sm));
-            
+            uint32_t data = pio_sm_get(pio,sm);
+            printf("data=%x'n",data);
+            buf_p[j]=data&0xff;
+            buf_p[j+1]=(data>>8)&0xff;
+            buf_p[j+2]=(data>>16)&0xff;
+            buf_p[j+3]=(data>>24)&0xff;
         }
-        cs_deselect();
-
-
+        //     spi_transfer_word((data>>16)&0xffff);
+        //     spi_transfer_word(data&0xffff);
+            
+        // }
+        // cs_deselect();
+       // blink(1);
         tft.imshow(buf,w,h);
+        //blink(1);
     
         //print_data(buf_size,buf);
     }
