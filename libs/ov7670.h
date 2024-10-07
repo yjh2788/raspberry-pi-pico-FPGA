@@ -8,10 +8,13 @@
 #include "hardware/pwm.h"
 #include "ImageProcessing.h"
 #include "pico/binary_info/code.h"
+#include "BUS_control.h"
 
 // respberry pico gpio pin allocation
-#define SCL 9
-#define SDA 8
+#define SCL 15   //8bit version
+#define SDA 14   //8bit version
+//#define SCL 9  //spi version
+//#define SDA 8  //spi version
 #define VS 13
 #define HS 12
 #define PLK 11

@@ -16,20 +16,13 @@
 //#define TFT_SPI 
 
 #ifdef TFT_8BIT
+#include "BUS_control.h"
 
-#define TFT_RST 21
-#define TFT_CS 22 /// tft_lcd chip select
-#define TFT_DC 20
-#define TFT_WR 16
-#define TFT_RD 19
-#define D0  0
-#define D1  1
-#define D2  2
-#define D3  3
-#define D4  4
-#define D5  5
-#define D6  6
-#define D7  7
+#define TFT_RD 16
+#define TFT_WR 17
+#define TFT_DC 18
+#define TFT_CS 19 /// tft_lcd chip select
+//#define TFT_RST 21
 
 
 #elif defined(TFT_SPI)

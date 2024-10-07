@@ -74,10 +74,10 @@ int32_t pwm_set_freq_duty(uint32_t slice_num, uint32_t chan, uint32_t freq,
     return 1;
 }
 
-float measure_duty_cycle(uint gpio) {
+float measure_duty_cycle(uint32_t gpio) {
     // Only the PWM B pins can be used as inputs.
     assert(pwm_gpio_to_channel(gpio) == PWM_CHAN_B);
-    uint slice_num = pwm_gpio_to_slice_num(gpio);
+    uint32_t slice_num = pwm_gpio_to_slice_num(gpio);
 
     // Count once for every 100 cycles the PWM B input is high
     pwm_config cfg = pwm_get_default_config();
@@ -124,7 +124,7 @@ void debug_print(const char *fmt, ...) {
 }
 void debug_error_led()
 {
-    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
+    const uint32_t LED_PIN = PICO_DEFAULT_LED_PIN;
     gpio_init(LED_PIN);
     //gpio_set_dir(LED_PIN, GPIO_OUT);
     pinMode(LED_PIN,0);
@@ -138,7 +138,7 @@ void debug_error_led()
 }
 
 
-bool wait_for_posedge(uint input_pin)
+bool wait_for_posedge(uint32_t input_pin)
 {
     bool past=gpio_get(input_pin);
     
@@ -156,7 +156,7 @@ bool wait_for_posedge(uint input_pin)
     }
 }
 
-bool wait_for_negedge(uint input_pin)
+bool wait_for_negedge(uint32_t input_pin)
 {
     bool past=gpio_get(input_pin);
     
@@ -178,7 +178,7 @@ bool wait_for_negedge(uint input_pin)
 void blink(int num)
 {
    
-    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
+    const uint32_t LED_PIN = PICO_DEFAULT_LED_PIN;
     gpio_init(LED_PIN);
     //gpio_set_dir(LED_PIN, GPIO_OUT);
     pinMode(LED_PIN,0);
@@ -197,7 +197,7 @@ void debug_blink(int num)
 {
     if (debug)
     {
-        const uint LED_PIN = PICO_DEFAULT_LED_PIN;
+        const uint32_t LED_PIN = PICO_DEFAULT_LED_PIN;
         gpio_init(LED_PIN);
         //gpio_set_dir(LED_PIN, GPIO_OUT);
         pinMode(LED_PIN,0);
@@ -223,15 +223,15 @@ void print_data(size_t size, uint8_t*buf)
     printf("\nfinish");
 }
 
-void reset_callback(uint gpio, uint32_t events)
-{
-    watchdog_reboot(0, 0, 0);
-}
-void reset_IRQ_init(uint pin)
-{
-    gpio_init(pin);
-    gpio_set_dir(pin,GPIO_IN);
-    gpio_pull_up(pin);
-    gpio_set_irq_enabled_with_callback(pin, GPIO_IRQ_EDGE_FALL, true, &reset_callback);
-}
+// void reset_callback(uint32_t gpio, uint32_t events)
+// {
+//     watchdog_reboot(0, 0, 0);
+// }
+// void reset_IRQ_init(uint32_t pin)
+// {
+//     gpio_init(pin);
+//     gpio_set_dir(pin,GPIO_IN);
+//     gpio_pull_up(pin);
+//     gpio_set_irq_enabled_with_callback(pin, GPIO_IRQ_EDGE_FALL, true, &reset_callback);
+// }
 

@@ -409,14 +409,18 @@ void TFT_LCD::init() /* initialize TFT-LCD with HX8347 */
   gpio_set_dir(TFT_WR, GPIO_OUT);
   gpio_put(TFT_WR, 0);
 
-  gpio_init(TFT_RST);
-  gpio_set_dir(TFT_RST, GPIO_OUT);
-  gpio_put(TFT_RST, 1);
+  gpio_init(TFT_RD);
+  gpio_set_dir(TFT_RD, GPIO_OUT);
+  gpio_put(TFT_RD, 1);
+
+  // gpio_init(TFT_RST);
+  // gpio_set_dir(TFT_RST, GPIO_OUT);
+  // gpio_put(TFT_RST, 1);
 
   // TFT_LCD reset
-  gpio_put(TFT_RST, 0);
-  sleep_ms(100);
-  gpio_put(TFT_RST, 1);
+  // gpio_put(TFT_RST, 0);
+  // sleep_ms(100);
+  // gpio_put(TFT_RST, 1);
   reg_init();
 }
 
@@ -444,6 +448,7 @@ void TFT_LCD::imshow(Array<uint8_t> arr, uint8_t res)
     break;
 
   }
+  PICO2LCD();
   uint8_t *buf = arr.getbuf();
   int t_width=width*2;
   setAddrWindow(0, 0, width, height);
@@ -483,7 +488,7 @@ void TFT_LCD::imshow(uint8_t* arr, uint8_t res)
     break;
 
   }
-  
+  PICO2LCD();
   int t_width=width*2;
   setAddrWindow(0, 0, width, height);
   cs_select();
@@ -500,6 +505,7 @@ void TFT_LCD::imshow(uint8_t* arr, uint8_t res)
 
 void TFT_LCD::imshow(uint8_t* arr, int width, int height)
 {
+  PICO2LCD();
   int total=width*2*height;
   //setAddrWindow(0, 0, width, height);
   sendcommand(HX8357_RAMWR);
@@ -516,6 +522,7 @@ void TFT_LCD::imshow(uint8_t* arr, int width, int height)
 
 void TFT_LCD::imshow(uint8_t* arr, int x, int y, int width, int height)
 {
+  
   int total=width*2*height;
   setAddrWindow(x, y, width, height);
   sendcommand(HX8357_RAMWR);
