@@ -1,0 +1,18 @@
+# system info SPI_SIMD on 2024.08.14.14:21:53
+system_info:
+name,value
+DEVICE,EP4CE22F17C6
+DEVICE_FAMILY,Cyclone IV E
+GENERATION_ID,1723612896
+#
+#
+# Files generated for SPI_SIMD on 2024.08.14.14:21:53
+files:
+filepath,kind,attributes,module,is_top
+simulation/SPI_SIMD.v,VERILOG,,SPI_SIMD,true
+simulation/submodules/spiphyslave.v,VERILOG,,SPIPhy,false
+#
+# Map from instance-path to kind of module
+instances:
+instancePath,module
+SPI_SIMD.spislave_0,SPIPhy

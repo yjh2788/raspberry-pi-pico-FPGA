@@ -16,6 +16,21 @@ wire [bw-1:0]A0, A1, A2, A3;
 wire [bw-1:0]B0, B1, B2, B3;
 wire [bw-1:0]result0, result1, result2, result3;
 
+SPI_SIMD t1(
+.stsinkvalid(),  
+.stsinkdata(),   
+.stsinkready(),  
+.stsourceready(),
+.stsourcevalid(),
+.stsourcedata(), 
+.sysclk(),       
+.nreset(),       
+.mosi(),         
+.nss(),          
+.miso(),         
+.sclk());          
+
+
 SIPO u1(rst,clk,load,data_in[0],A0);
 SIPO u2(rst,clk,load,data_in[1],B0);
 ALU A_1(.A(A0),.B(B0),.mode(mode),.dtype(dtype),.result(result0));
