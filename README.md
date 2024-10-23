@@ -6,7 +6,7 @@ This project utilizes the Raspberry Pi Pico SDK, which is licensed under the BSD
 This is an ongoing project aimed at developing an acceleration system that enables efficient image processing and AI on a microprocessor. The current setup captures images from an OV7670 module and displays them on a TFT LCD. The next step involves integrating an FPGA as a computational accelerator to enhance image processing and AI computations.
 
 # Project block diagram
-![project block diagram](https://github.com/user-attachments/assets/27d7d1f2-331e-4032-86ee-c9dbc1c3d7e7)
+![project block diagram](https://github.com/user-attachments/assets/bcc22972-8721-490e-83e8-ee553e03e5f6)
 
 # Importing C++ Program on Raspberrypi Pico
 
