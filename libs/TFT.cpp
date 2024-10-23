@@ -633,22 +633,34 @@ void TFT_LCD::setRotation(uint8_t m)
 
   switch (m)
   {
-  case 0:
-    madctl = TFT_degree0|m_color; // 0 degree rotation (default)
-    m_degree=TFT_degree0;
-    break;
-  case 1:
-    madctl = TFT_degree90|m_color; // 90 degree rotation
-    m_degree=TFT_degree90;
-    break;
-  case 2:
-    madctl = TFT_degree180|m_color; // 180 degree rotation
-    m_degree=TFT_degree180;
-    break;
-  case 3:
-    madctl = TFT_degree270|m_color; // 270 degree rotation
-    m_degree=TFT_degree270;
-    break;
+    case 0:
+      madctl = TFT_degree0|m_color; // 0 degree rotation (default)
+      m_degree=TFT_degree0;
+      break;
+    case 1:
+      madctl = TFT_degree90|m_color; // 90 degree rotation
+      m_degree=TFT_degree90;
+      break;
+    case 2:
+      madctl = TFT_degree180|m_color; // 180 degree rotation
+      m_degree=TFT_degree180;
+      break;
+    case 3:
+      madctl = TFT_degree270|m_color; // 270 degree rotation
+      m_degree=TFT_degree270;
+      break;
+    case 4:
+      madctl = TFT_X_INVERT|m_color; // 270 degree rotation
+      m_degree = TFT_X_INVERT;
+      break;
+    case 5:
+      madctl = TFT_Y_INVERT|m_color; // 270 degree rotation
+      m_degree = TFT_Y_INVERT;
+      break;
+    case 6:
+      madctl = TFT_XY_EXCHANGE|m_color; // 270 degree rotation
+      m_degree = TFT_XY_EXCHANGE;
+      break;
   }
   sendcommand(HX8357_MADCTL); // MADCTL command
   sendDataByte(madctl);       // Set the rotation
@@ -713,14 +725,107 @@ void TFT_LCD::color(U16 colorfore, U16 colorback) /* set foreground and backgrou
   background = colorback;
 }
 
-// void TFT_LCD::string_size(U08 xChar, U08 yChar, U16 colorfore, U16 colorback, char  *str,U08 width, U08 height )	/* write TFT-LCD string */
-// {
-//  drawstring(xChar,yChar,str,colorfore,colorback,width,height);
-// }
-// void TFT_LCD::string(U08 xChar, U08 yChar, U16 colorfore, U16 colorback, char *str)	/* write TFT-LCD string */
-// {
-// 	drawstring(xChar,yChar,str,colorfore,colorback,1,1);
-// }
+void TFT_LCD::string_size(int16_t xChar, int16_t yChar, int16_t colorfore, int16_t colorback, char  *str,int8_t width, int8_t height )	/* write TFT-LCD string */
+{
+ drawstring(xChar,yChar,str,colorfore,colorback,width,height);
+}
+void TFT_LCD::string(int16_t xChar, int16_t yChar, int16_t colorfore, int16_t colorback, char *str)	/* write TFT-LCD string */
+{
+	drawstring(xChar,yChar,str,colorfore,colorback,1,1);
+}
+
+void TFT_LCD::drawstring(int16_t x, int16_t y, char* str,
+uint16_t text_color, uint16_t background_color, uint8_t size_x, uint8_t size_y)
+{
+	char ch1;
+	char width;
+	if(size_x==1) width=5;
+	else if(size_x==2) width=10;
+	int16_t xpos=0,ypos=0,xchar=0,ychar=0;
+	
+	int count=0,cnty=0;
+	xcharacter=x;
+	ycharacter=y;
+	while(*str)
+	{
+		ch1 = *str;
+		str++;
+		xpos=xcharacter+count*width;
+		ypos=ycharacter+16*cnty;
+		if(xpos>480){
+			cnty++;
+			xcharacter=0;
+			count=0;
+			//ychar=16;
+		}
+		drawChar(xpos,ypos,ch1,text_color,background_color,size_x,size_y);		// English ASCII character
+		count++;
+		
+	}
+}
+void TFT_LCD::drawChar(int16_t x, int16_t y, uint8_t c,
+	uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y)
+{	
+	for (int8_t i = 0; i < 5; i++)  // Char bitmap = 5 columns
+	{
+		uint8_t line = font[c * 5 + i];
+		for (int8_t j = 0; j < 8; j++, line >>= 1) 
+		{
+			if (line & 1) 
+			{
+				if (size_x == 1 && size_y == 1)
+					TFT_pixel(x + i, y + j, color);
+				else
+					writeFillRect(x + i * size_x, y + j * size_y, size_x, size_y, color);
+			} 
+			else if (bg != color)
+			{
+				if (size_x == 1 && size_y == 1)
+					TFT_pixel(x + i, y + j, bg);
+				else
+					writeFillRect(x + i * size_x, y + j * size_y, size_x, size_y, bg);
+			}
+		}
+	}
+	if (bg != color)  // If opaque, draw vertical line for last column
+	{
+		if (size_x == 1 && size_y == 1)
+			writeFastVLine(x + 5, y, 8, bg);
+		else
+			writeFillRect(x + 5 * size_x, y, size_x, 8 * size_y, bg);
+	}
+}  
+void TFT_LCD::writeFillRect(int16_t x, int16_t y, int16_t size_x, int16_t size_y, uint16_t color)
+{
+	for (short i = 0; i < size_x; i++)
+		drawSLine(x+1, y + i, size_y, color);	
+}
+
+void TFT_LCD::drawSLine(int16_t x, int16_t y, int16_t length, uint16_t color)
+{
+	int i ;
+	int x2 = x+ length;
+
+	setAddrWindow(x,y,x2,y);
+	cs_select();
+	DC_COMMAND();
+	write8(RAMWR);
+	DC_DATA();
+	for (i=0; i<  (length-1) ; i++)
+	{
+		write8(color>>8);
+		write8(color);
+	}
+}
+
+
+void TFT_LCD::writeFastVLine(int16_t x, int16_t y, int16_t i, uint16_t bg)
+{
+	// Overwrite in subclasses if startWrite is defined!
+	// Can be just 
+	Line(x, y, x, y+i-1, bg);
+	// or writeFillRect(x, y, 1, h, bg);
+}
 
 void TFT_LCD::TFT_English(U08 code) /* write a English ASCII character */
 {

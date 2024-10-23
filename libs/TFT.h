@@ -36,10 +36,14 @@
 
 #define TFT_RGB 0x08
 #define TFT_BGR 0x00
-#define TFT_degree0 0x40
-#define TFT_degree90 0x20
-#define TFT_degree180 0x80
-#define TFT_degree270 0xE0
+#define TFT_degree0 0x00
+#define TFT_degree90 0x60
+#define TFT_degree180 0xD0
+#define TFT_degree270 0xA0
+#define TFT_Y_INVERT 0x80
+#define TFT_X_INVERT 0x40
+#define TFT_XY_EXCHANGE 0x20
+
 
 #define READ_BIT 0x80
 
@@ -97,10 +101,14 @@ public:
     void color_screen(U16 color);
     void screen_mode(uint8_t mode); // set screen direction mode
     void TFT_pixel(U16 xPos, U16 yPos, U16 color);
+    void writeFillRect(int16_t x, int16_t y, int16_t size_x, int16_t size_y, uint16_t color);
+    void writeFastVLine(int16_t x, int16_t y, int16_t i, uint16_t bg);
     void xy(U08 xChar, U08 yChar);            // set character position
     void color(U16 colorfore, U16 colorback); // set foreground and background color
-    // void string_size(U08 xChar, U08 yChar, U16 colorfore, U16 colorback, char *str,U08 width, U08 height );
-    // void string(U08 xChar, U08 yChar, U16 colorfore, U16 colorback, char *str);	// write TFT-LCD string
+    void drawChar(int16_t x, int16_t y, uint8_t c, uint16_t color, uint16_t bg, uint8_t size_x, uint8_t size_y); 
+    void drawstring(int16_t x, int16_t y, char* str, uint16_t text_color, uint16_t background_color, uint8_t size_x, uint8_t size_y);
+    void string_size(int16_t xChar, int16_t yChar, int16_t colorfore, int16_t colorback, char  *str,int8_t width, int8_t height );
+    void string(int16_t xChar, int16_t yChar, int16_t colorfore, int16_t colorback, char *str);	// write TFT-LCD string
     void TFT_English(U08 code);                // write a English ASCII character
     unsigned int KS_code_conversion(U16 KSSM); // convert KSSM(�ϼ���) to KS(������)
     void TFT_Korean(U16 code);                 // write a Korean character
@@ -114,6 +122,7 @@ public:
     void unsigned_float(float number, U08 integral, U08 fractional); // display unsigned floating-point number
     void signed_float(float number, U08 integral, U08 fractional);   // display signed floating-point number
     //
+    void drawSLine(int16_t x, int16_t y, int16_t length, uint16_t color);
     void Line(S16 x1, S16 y1, S16 x2, S16 y2, U16 color);            // draw a straight line
     void Rectangle(S16 x1, S16 y1, S16 x2, S16 y2, U16 color);       // draw a rectangle
     void Block(S16 x1, S16 y1, S16 x2, S16 y2, U16 color, U16 fill); // draw a rectangle with filled color

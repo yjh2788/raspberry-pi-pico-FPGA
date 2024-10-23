@@ -19,16 +19,17 @@ add_executable(${projname}
         #camera_project.cpp
         camera_project_8bit.cpp
         #camera_project_PIO.cpp
+        #"${project_PATH}/libs/PIO_setting.cpp"
         "${project_PATH}/libs/BUS_control.cpp"
-        "${project_PATH}/libs/PIO_setting.cpp"
         "${project_PATH}/libs/ov7670.cpp"
         "${project_PATH}/libs/ImageProcessing.cpp"
         "${project_PATH}/libs/myfunc.cpp"
         "${project_PATH}/libs/Array.cpp"
         "${project_PATH}/libs/TFT.cpp"
+        "${project_PATH}/libs/display_control.cpp"
         )
 
-pico_generate_pio_header(${projname} ${project_PATH}/libs/read_ov7670.pio)
+#pico_generate_pio_header(${projname} ${project_PATH}/libs/read_ov7670.pio)
 pico_enable_stdio_usb(${projname} 1)
 pico_enable_stdio_uart(${projname} 0)
 
@@ -44,7 +45,7 @@ target_link_libraries(${projname}
         hardware_dma
         pico_multicore 
         hardware_sync
-        hardware_pio
+        #hardware_pio
         #FreeRTOS-Kernel
         #FreeRTOS-Kernel-Heap4
 )

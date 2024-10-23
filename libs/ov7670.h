@@ -39,11 +39,9 @@
 #define QCIF_width 176u
 #define QCIF_height 144u
 
-#define default_Itype IMG_Type::YUV
+#define default_Itype IMG_Type::RAW_DATA
 #define ov7670_I2C_ADDRESS 0x21
 // The 7 bit SCCB/I2C address is 0x21, this translates to 0x42 for write address and 0x43 for read address.
-
-
 
 class ov7670{
 public:
@@ -61,9 +59,8 @@ public:
     uint32_t m_D5;
     uint32_t m_D6;
     uint32_t m_D7;
-    Mat m_img;
     i2c_inst_t *m_i2c = nullptr;
-    uint8_t m_resolution=QVGA;
+    uint8_t m_resolution=QQVGA;
     uint8_t m_img_format=RGB565;
  
     ov7670();

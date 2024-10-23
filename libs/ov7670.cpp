@@ -277,7 +277,6 @@ const uint8_t reg_vals[][2] = {
 };
 
 ov7670::ov7670()
-    : m_img(QCIF_width, QCIF_height, default_Itype)
 {
     m_SCL = SCL;
     m_SDA = SDA;
@@ -293,6 +292,9 @@ ov7670::ov7670()
     m_D5 = D5;
     m_D6 = D6;
     m_D7 = D7;
+    m_resolution = QQVGA;
+    m_img_format = IMG_Type::RGB565;
+
 }
 ov7670::ov7670(IMG_Type Itype)
 {
@@ -310,11 +312,10 @@ ov7670::ov7670(IMG_Type Itype)
     m_D5 = D5;
     m_D6 = D6;
     m_D7 = D7;
-    m_resolution = QVGA;
+    m_resolution = QQVGA;
     m_img_format = Itype;
 }
 ov7670::ov7670(uint32_t width, uint32_t height, IMG_Type Itype)
-    : m_img(width, height, Itype)
 {
     m_SCL = SCL;
     m_SDA = SDA;
@@ -330,7 +331,7 @@ ov7670::ov7670(uint32_t width, uint32_t height, IMG_Type Itype)
     m_D5 = D5;
     m_D6 = D6;
     m_D7 = D7;
-    m_resolution = QVGA;
+    m_resolution = QQVGA;
     m_img_format = Itype;
 }
 
