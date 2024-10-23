@@ -19,8 +19,6 @@ wire [7:0] simd_out;
 wire [7:0] pico_cam;
 wire rst;
 
-///assign simd_out = 8'hff;
-
 assign pico_data_in = pico_data;
 assign pico_data = direction ? pico_data_out:8'bz;
 
@@ -39,9 +37,8 @@ power_on_reset POR(.clk(clk),.rst(rst));
 //        .send(),
 //        .data());
 
-SIMD_CNN U2(
+SIMD_v1 U2(
 		   .rst(rst),
-			//.clk(),
 		   .CS(CS),
 			.excute(excute),
 			.WR(WR),
@@ -55,8 +52,8 @@ SIMD_CNN U2(
 endmodule 
 
 module power_on_reset (
-    input wire clk,       // system clk
-    output reg rst     // reset(active low)
+    input wire clk,       // system clk   
+    output reg rst        //__---___
 );
     reg [3:0] reset_counter = 4'h6; //
 	 reg [3:0] reset_counter2 = 4'h6;

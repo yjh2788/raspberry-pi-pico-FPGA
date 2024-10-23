@@ -24,26 +24,26 @@ initial begin
 clk=0;CS=0;WR=0;RD=0;CD=0;excute=0;sel_poc=0;sel_sod=1;direction=0;in_pico_data=8'hff;cam_data=8'h00;
 #50 CD=1; #10 WR=1;#10 WR=0;
 #50 CS=1;
-#50 CD=1; #50 in_pico_data=8'd64; #10 WR=1;#10 WR=0;
-#50 CD=0; #50 in_pico_data=8'h00; #10 WR=1;#10 WR=0;
+#50 CD=1; #50 in_pico_data=8'd64; #10 WR=1;#10 WR=0;//mode
+#50 CD=0; #50 in_pico_data=8'd1; #10 WR=1;#10 WR=0;//a+b=0, a*b=1, a*b+c'=2
 
 #50 CD=1; #50 in_pico_data=8'd00; #10 WR=1;#10 WR=0;
-#50 CD=0; #50 in_pico_data=8'h0f; #10 WR=1;#10 WR=0;
+#50 CD=0; #50 in_pico_data=8'd2; #10 WR=1;#10 WR=0;
 
 #50 CD=1; #50 in_pico_data=8'd01; #10 WR=1;#10 WR=0;
-#50 CD=0; #50 in_pico_data=8'h0f; #10 WR=1;#10 WR=0;
+#50 CD=0; #50 in_pico_data=8'd3; #10 WR=1;#10 WR=0;
 
 #50 CD=1; #50 in_pico_data=8'd02; #10 WR=1;#10 WR=0;
-#50 CD=0; #50 in_pico_data=8'h0f; #10 WR=1;#10 WR=0;
+#50 CD=0; #50 in_pico_data=8'd4; #10 WR=1;#10 WR=0;
 
 #50 CD=1; #50 in_pico_data=8'd32; #10 WR=1;#10 WR=0;
-#50 CD=0; #50 in_pico_data=8'h0f; #10 WR=1;#10 WR=0;
+#50 CD=0; #50 in_pico_data=8'd5; #10 WR=1;#10 WR=0;
 
 #50 CD=1; #50 in_pico_data=8'd33; #10 WR=1;#10 WR=0;
-#50 CD=0; #50 in_pico_data=8'h0f; #10 WR=1;#10 WR=0;
+#50 CD=0; #50 in_pico_data=8'd6; #10 WR=1;#10 WR=0;
 
 #50 CD=1; #50 in_pico_data=8'd34; #10 WR=1;#10 WR=0;
-#50 CD=0; #50 in_pico_data=8'h0f; #10 WR=1;#10 WR=0;
+#50 CD=0; #50 in_pico_data=8'd7; #10 WR=1;#10 WR=0;
 
 #50 excute=1; #10 excute=0;direction=1;
 #10 RD=1; #10 RD=0;

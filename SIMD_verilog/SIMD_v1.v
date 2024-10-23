@@ -1,4 +1,4 @@
-module SIMD_CNN 
+module SIMD_v1
 #(parameter reg_size=32, bw=8, num_reg = 65)
 (
 	input rst,
@@ -85,7 +85,6 @@ reg [bw*reg_size-1:0] shift_data;
  
 
 always@(negedge excute or posedge RD or posedge rst)begin
-	//if(!excute) begin
 		if(rst) 
 			shift_data<=0;
 		else if(RD) begin
@@ -94,14 +93,8 @@ always@(negedge excute or posedge RD or posedge rst)begin
 			end
 		else 
 			shift_data<=din;
-	//end
 end
 
-//always@(posedge RD) begin
-//	dout<=shift_data[bw*reg_size-1:bw*reg_size-bw];
-//	shift_data<={shift_data[bw*reg_size-bw-1:0],{bw{1'b0}}};
-//	
-//end
 
 endmodule
 
