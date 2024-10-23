@@ -54,27 +54,10 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH tb_simd -section_id eda_simulation
-set_global_assignment -name EDA_TEST_BENCH_NAME tb_simd -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_simd
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_simd -section_id tb_simd
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_simd.v -section_id tb_simd
-set_global_assignment -name VERILOG_FILE SPI_SIMD/synthesis/SPI_SIMD.v
-set_global_assignment -name QIP_FILE SPI_SIMD/synthesis/SPI_SIMD.qip
-set_global_assignment -name VERILOG_FILE floatingPoint/synthesis/floatingPoint.v -library floatingPoint
-set_global_assignment -name QIP_FILE floatingPoint/synthesis/floatingPoint.qip
-set_global_assignment -name VERILOG_FILE SIPO.v
-set_global_assignment -name VERILOG_FILE SIMD.v
-set_global_assignment -name VERILOG_FILE PISO.v
-set_global_assignment -name VERILOG_FILE ALU.v
-set_global_assignment -name BDF_FILE TOP.bdf
-set_global_assignment -name VERILOG_FILE arithmatic.v
-set_global_assignment -name VERILOG_FILE tb_simd.v
-set_global_assignment -name VERILOG_FILE TOP.v
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH tb_TOP -section_id eda_simulation
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform.vwf
 set_location_assignment PIN_D3 -to pico_data[0]
 set_location_assignment PIN_C3 -to pico_data[1]
 set_location_assignment PIN_A2 -to pico_data[2]
@@ -102,4 +85,25 @@ set_location_assignment PIN_B11 -to LCD_data[5]
 set_location_assignment PIN_A12 -to LCD_data[6]
 set_location_assignment PIN_D11 -to LCD_data[7]
 set_location_assignment PIN_D5 -to direction
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_TOP
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_TOP -section_id tb_TOP
+set_global_assignment -name EDA_TEST_BENCH_NAME tb_TOP -section_id eda_simulation
+set_global_assignment -name VERILOG_FILE tb_TOP.v
+set_global_assignment -name VERILOG_FILE operand_reg_arr.v
+set_global_assignment -name VERILOG_FILE operand_reg.v
+set_global_assignment -name VERILOG_FILE MAC_array.v
+set_global_assignment -name VERILOG_FILE MAC.v
+set_global_assignment -name VERILOG_FILE SPI_SIMD/synthesis/SPI_SIMD.v -library SPI_SIMD
+set_global_assignment -name QIP_FILE SPI_SIMD/synthesis/SPI_SIMD.qip
+set_global_assignment -name VERILOG_FILE floatingPoint/synthesis/floatingPoint.v -library floatingPoint
+set_global_assignment -name QIP_FILE floatingPoint/synthesis/floatingPoint.qip
+set_global_assignment -name VERILOG_FILE SIPO.v
+set_global_assignment -name VERILOG_FILE SIMD.v
+set_global_assignment -name VERILOG_FILE PISO.v
+set_global_assignment -name VERILOG_FILE ALU.v
+set_global_assignment -name BDF_FILE TOP.bdf
+set_global_assignment -name VERILOG_FILE arithmatic.v
+set_global_assignment -name VERILOG_FILE TOP.v
+set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform.vwf
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_TOP.v -section_id tb_TOP
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
