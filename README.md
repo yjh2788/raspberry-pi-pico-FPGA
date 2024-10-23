@@ -8,6 +8,8 @@ This is an ongoing project aimed at developing an acceleration system that enabl
 # Project block diagram
 ![project block diagram](https://github.com/user-attachments/assets/bcc22972-8721-490e-83e8-ee553e03e5f6)
 
+# SIMD_v1 structure (on FPGA)
+![SIMD_v1 structure](https://github.com/user-attachments/assets/50585e85-3773-4495-819d-5a2743cf094f)
 # Importing C++ Program on Raspberrypi Pico
 
 ## Build Instructions
