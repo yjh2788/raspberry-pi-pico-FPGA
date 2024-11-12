@@ -17,8 +17,9 @@ pico_sdk_init()
 add_executable(${projname}
         #camera_project_multicore.cpp
         #camera_project.cpp
-        camera_project_8bit.cpp
+        #camera_project_8bit.cpp
         #camera_project_PIO.cpp
+        SIMD_test.cpp
         #"${project_PATH}/libs/PIO_setting.cpp"
         "${project_PATH}/libs/BUS_control.cpp"
         "${project_PATH}/libs/ov7670.cpp"
@@ -27,6 +28,7 @@ add_executable(${projname}
         "${project_PATH}/libs/Array.cpp"
         "${project_PATH}/libs/TFT.cpp"
         "${project_PATH}/libs/display_control.cpp"
+        "${project_PATH}/libs/SIMD.cpp"
         )
 
 #pico_generate_pio_header(${projname} ${project_PATH}/libs/read_ov7670.pio)

@@ -25,7 +25,7 @@ clk=0;CS=0;WR=0;RD=0;CD=0;excute=0;sel_poc=0;sel_sod=1;direction=0;in_pico_data=
 #50 CD=1; #10 WR=1;#10 WR=0;
 #50 CS=1;
 #50 CD=1; #50 in_pico_data=8'd64; #10 WR=1;#10 WR=0;//mode
-#50 CD=0; #50 in_pico_data=8'd1; #10 WR=1;#10 WR=0;//a+b=0, a*b=1, a*b+c'=2
+#50 CD=0; #50 in_pico_data=8'd0; #10 WR=1;#10 WR=0;//a+b=0, a*b=2, a*b+c'=1
 
 #50 CD=1; #50 in_pico_data=8'd00; #10 WR=1;#10 WR=0;
 #50 CD=0; #50 in_pico_data=8'd2; #10 WR=1;#10 WR=0;

@@ -10,6 +10,7 @@ public:
     ov7670 cam;
     
     Display();
+    Display(uint16_t COLOR);
     void setRes_type(resolution res,IMG_Type type);
     
 };

@@ -10,7 +10,8 @@ module TOP(
 	input direction,
 	inout wire[7:0] pico_data,
 	input wire[7:0] cam_data,
-	output wire[7:0] LCD_data
+	output wire[7:0] LCD_data,
+	output reg[7:0] LED 
 	);
 
 wire [7:0] pico_data_in;
@@ -46,8 +47,13 @@ SIMD_v1 U2(
 			.AD(CD),//1=Addr,0=data
 			.data_in(pico_data_in),
 			.data_out(simd_out));
-
-
+//
+//assign LED=pico_data_in;
+			
+always@(posedge rst or posedge RD)begin
+	if(rst) LED<=0;
+	else if(RD) LED<=pico_data_in;
+end
 
 endmodule 
 

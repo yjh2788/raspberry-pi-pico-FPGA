@@ -19,6 +19,27 @@ void bus_ctrl_pin_init()
 }
 void PICO2LCD()
 {
+    PICO_Write();
+    gpio_put(sel_pico_cam_pin, sel_PICO);
+}
+void CAM2PICO()
+{
+    PICO_Read();
+    gpio_put(sel_pico_cam_pin, sel_cam);
+    gpio_put(sel_SIMD_data_pin,sel_p_c);
+}
+void SIMD2PICO()
+{
+    PICO_Read();
+    gpio_put(sel_SIMD_data_pin,sel_simd);
+}
+void PICO2SIMD()
+{
+    PICO_Write();
+}
+
+inline void PICO_Write()
+{
     gpio_set_dir_out_masked(0xff);
     gpio_pull_down(D0);
     gpio_pull_down(D1);
@@ -29,15 +50,11 @@ void PICO2LCD()
     gpio_pull_down(D6);
     gpio_pull_down(D7);
     gpio_put(BUS_DIR_pin, PICO_WR);
-    gpio_put(sel_pico_cam_pin, sel_PICO);
-    //sleep_us(50);
 }
-void CAM2PICO()
+
+inline void PICO_Read()
 {
     gpio_set_dir_in_masked(0xff);
-    gpio_put(BUS_DIR_pin, PICO_RD);
-    gpio_put(sel_pico_cam_pin, sel_cam);
-    gpio_put(sel_SIMD_data_pin,sel_p_c);
     gpio_pull_up(D0);
     gpio_pull_up(D1);
     gpio_pull_up(D2);
@@ -46,6 +63,5 @@ void CAM2PICO()
     gpio_pull_up(D5);
     gpio_pull_up(D6);
     gpio_pull_up(D7);
-
-    //sleep_us(50);
+    gpio_put(BUS_DIR_pin, PICO_RD);
 }

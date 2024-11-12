@@ -27,6 +27,9 @@
 void bus_ctrl_pin_init();
 void PICO2LCD();
 void CAM2PICO();
-
+void SIMD2PICO();
+void PICO2SIMD();
+inline void PICO_Write();
+inline void PICO_Read();
 
 #endif

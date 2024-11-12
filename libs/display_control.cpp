@@ -27,6 +27,17 @@ Display::Display()
     cam.setResolution(resolution::QQVGA);
     cam.setImageType(IMG_Type::RGB565);
 }
+Display::Display(uint16_t COLOR)
+{
+    tft.init();
+    tft.color_screen(COLOR);
+    tft.setAddrWindow(0,0,default_w,default_h);
+    tft.setRGB();//qqvga
+    tft.setRotation(6);
+    cam.ov7670_init(I2C,I2C_baud);
+    cam.setResolution(resolution::QQVGA);
+    cam.setImageType(IMG_Type::RGB565);
+}
 void Display::setRes_type(resolution res,IMG_Type type)
 {
     if (res==resolution::QQVGA)
